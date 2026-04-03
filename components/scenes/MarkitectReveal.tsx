@@ -12,6 +12,15 @@ export default function MarkitectReveal() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const progressRef = useRef(0)
   const petalsRef = useRef<ReturnType<typeof createGeoPetals>>([])
+  const isDarkRef = useRef(false)
+
+  useEffect(() => {
+    const check = () => { isDarkRef.current = document.documentElement.classList.contains('dark') }
+    check()
+    const observer = new MutationObserver(check)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const container = containerRef.current
@@ -38,9 +47,9 @@ export default function MarkitectReveal() {
     const trigger = ScrollTrigger.create({
       trigger: container,
       start: 'top top',
-      end: '+=100%',
+      end: '+=300%',
       pin: true,
-      scrub: 1,
+      scrub: 2.5,
       anticipatePin: 1,
       onUpdate: (self) => {
         progressRef.current = self.progress
@@ -61,7 +70,7 @@ export default function MarkitectReveal() {
       if (isVisible) {
         const w = canvas!.width / dpr
         const h = canvas!.height / dpr
-        drawMarkitectBloom(ctx!, petalsRef.current, progressRef.current, w, h)
+        drawMarkitectBloom(ctx!, petalsRef.current, progressRef.current, w, h, isDarkRef.current)
       }
       rafId = requestAnimationFrame(render)
     }

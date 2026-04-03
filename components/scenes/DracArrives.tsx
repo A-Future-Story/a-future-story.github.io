@@ -20,7 +20,7 @@ export default function DracArrives() {
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: '+=100%',
+        end: '+=340%',
         pin: true,
         scrub: 1,
         anticipatePin: 1,
@@ -72,7 +72,7 @@ export default function DracArrives() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen w-full flex flex-col items-center justify-center bg-fig overflow-hidden"
+      className="relative h-screen w-full flex flex-col items-center justify-center bg-[#1C1915] overflow-hidden"
     >
       <div className="flex">
         {letters.map((letter, i) => (

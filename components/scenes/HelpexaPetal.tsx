@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
@@ -27,6 +27,15 @@ const STEPS = ['Train your agent', 'Customize & configure', 'Embed & launch']
 export default function HelpexaPetal() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const itemsRef = useRef<(HTMLDivElement | null)[]>([])
+  const [isDark, setIsDark] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsDark(document.documentElement.classList.contains('dark'))
+    check()
+    const obs = new MutationObserver(check)
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => obs.disconnect()
+  }, [])
 
   useEffect(() => {
     const triggers: ScrollTrigger[] = []
@@ -73,7 +82,7 @@ export default function HelpexaPetal() {
       <div ref={ref} className="max-w-4xl mx-auto mb-16 opacity-0">
         <a href="https://helpexa.com" target="_blank" rel="noopener noreferrer" className="block rounded-2xl overflow-hidden border border-walnut/5 shadow-[0_8px_60px_rgba(44,24,16,0.08)] hover:shadow-[0_12px_80px_rgba(44,24,16,0.12)] transition-shadow">
           <Image
-            src="/previews/helpexa.png"
+            src={isDark ? '/previews/helpexa-dark.png' : '/previews/helpexa.png'}
             alt="Helpexa landing page preview"
             width={1440}
             height={900}

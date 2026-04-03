@@ -6,7 +6,7 @@
   --color-rose: #C4706E;
   --color-sage: #8B9D77;
   --color-gold: #D4A843;
-  --color-fig: #2D1B3D;
+  --color-fig: #1C1915;
   --color-drac-gold: #C9963A;
   --color-drac-amber: #B8762D;
   --color-cream: #F0E8D8;
@@ -21,6 +21,7 @@ html {
   scrollbar-color: rgba(44, 24, 16, 0.15) transparent;
   background-color: var(--color-ivory);
   color: var(--color-walnut);
+  overflow-x: hidden;
 }
 html::-webkit-scrollbar {
   width: 6px;
@@ -47,11 +48,11 @@ html.dark body::after {
 }
 
 .dark .bg-ivory { background-color: #0F0D13; }
-.dark .bg-cream { background-color: #161320; }
-.dark .bg-fig { background-color: #1A0F2E; }
-.dark .bg-white\/60 { background-color: rgba(255,255,255,0.05); }
-.dark .bg-white\/50 { background-color: rgba(255,255,255,0.04); }
-.dark .bg-white\/40 { background-color: rgba(255,255,255,0.03); }
+.dark .bg-cream { background-color: #141311; }
+.dark .bg-fig { background-color: #141210; }
+.dark .bg-white\/60, .dark [class*="bg-white/60"] { background-color: rgba(255,255,255,0.05); }
+.dark .bg-white\/50, .dark [class*="bg-white/50"] { background-color: rgba(255,255,255,0.04); }
+.dark .bg-white\/40, .dark [class*="bg-white/40"] { background-color: rgba(255,255,255,0.03); }
 
 .dark .text-walnut { color: #E8E0D4; }
 .dark .text-walnut\/70 { color: rgba(232, 224, 212, 0.7); }
@@ -67,7 +68,7 @@ html.dark body::after {
 .dark .border-walnut\/15 { border-color: rgba(232, 224, 212, 0.15); }
 
 .dark .bg-ivory\/60 { background-color: rgba(15, 13, 19, 0.7); }
-.dark .bg-fig\/10 { background-color: rgba(200, 180, 255, 0.1); }
+.dark .bg-fig\/10 { background-color: rgba(28, 25, 21, 0.15); }
 .dark .bg-drac-gold\/15 { background-color: rgba(201, 150, 58, 0.12); }
 .dark .bg-drac-gold\/10 { background-color: rgba(201, 150, 58, 0.08); }
 .dark .bg-rose\/15 { background-color: rgba(196, 112, 110, 0.12); }
@@ -75,6 +76,12 @@ html.dark body::after {
 
 /* Dark mode navbar */
 .dark nav { color: #E8E0D4; }
+
+/* Toast animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
 .dark .shadow-\[0_8px_60px_rgba\(44\,24\,16\,0\.06\)\] { box-shadow: 0 8px 60px rgba(0,0,0,0.3); }
 .dark .shadow-\[0_8px_60px_rgba\(44\,24\,16\,0\.08\)\] { box-shadow: 0 8px 60px rgba(0,0,0,0.4); }
 

@@ -43,11 +43,12 @@ export function drawBloom(
   progress: number, // 0 to 1
   width: number,
   height: number,
+  bgColor: string = '#FAF7F2',
 ) {
   ctx.clearRect(0, 0, width, height)
 
   // Background
-  ctx.fillStyle = '#FAF7F2'
+  ctx.fillStyle = bgColor
   ctx.fillRect(0, 0, width, height)
 
   // Draw initial seed shape at center (visible even at progress 0)
@@ -56,7 +57,7 @@ export function drawBloom(
   const seedGradient = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, seedSize)
   seedGradient.addColorStop(0, `rgba(196, 112, 110, ${seedAlpha})`)
   seedGradient.addColorStop(0.5, `rgba(139, 157, 119, ${seedAlpha * 0.6})`)
-  seedGradient.addColorStop(1, 'rgba(250, 247, 242, 0)')
+  seedGradient.addColorStop(1, bgColor === '#FAF7F2' ? 'rgba(250, 247, 242, 0)' : 'rgba(15, 13, 19, 0)')
   ctx.fillStyle = seedGradient
   ctx.beginPath()
   ctx.arc(width / 2, height / 2, seedSize, 0, Math.PI * 2)
@@ -64,14 +65,15 @@ export function drawBloom(
 
   const seed2Gradient = ctx.createRadialGradient(width/2 + 15, height/2 - 10, 0, width/2 + 15, height/2 - 10, seedSize * 0.7)
   seed2Gradient.addColorStop(0, `rgba(139, 157, 119, ${seedAlpha * 0.7})`)
-  seed2Gradient.addColorStop(1, 'rgba(250, 247, 242, 0)')
+  seed2Gradient.addColorStop(1, bgColor === '#FAF7F2' ? 'rgba(250, 247, 242, 0)' : 'rgba(15, 13, 19, 0)')
   ctx.fillStyle = seed2Gradient
   ctx.beginPath()
   ctx.arc(width/2 + 15, height/2 - 10, seedSize * 0.7, 0, Math.PI * 2)
   ctx.fill()
 
   ctx.save()
-  ctx.globalCompositeOperation = 'multiply'
+  const isDarkBg = bgColor !== '#FAF7F2'
+  ctx.globalCompositeOperation = isDarkBg ? 'screen' : 'multiply'
 
   for (const petal of petals) {
     const petalProgress = Math.min(1, progress * 1.8) // petals bloom faster than full progress
@@ -83,10 +85,16 @@ export function drawBloom(
     ctx.rotate(petal.rotation)
     ctx.scale(scale, scale)
 
+    const alphaMultiplier = isDarkBg ? 2.5 : 1
+    const baseColor = petal.color.replace(/[\d.]+\)$/, (match) => {
+      const val = Math.min(1, parseFloat(match) * alphaMultiplier)
+      return val.toFixed(2) + ')'
+    })
+
     const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, petal.rx)
-    gradient.addColorStop(0, petal.color)
-    gradient.addColorStop(0.6, petal.color.replace(/[\d.]+\)$/, '0.1)'))
-    gradient.addColorStop(1, 'rgba(250, 247, 242, 0)')
+    gradient.addColorStop(0, baseColor)
+    gradient.addColorStop(0.6, baseColor.replace(/[\d.]+\)$/, '0.1)'))
+    gradient.addColorStop(1, bgColor === '#FAF7F2' ? 'rgba(250, 247, 242, 0)' : 'rgba(15, 13, 19, 0)')
 
     ctx.fillStyle = gradient
     ctx.beginPath()

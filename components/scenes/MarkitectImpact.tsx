@@ -69,7 +69,7 @@ export default function MarkitectImpact() {
   }, [])
 
   return (
-    <section className="bg-cream py-20 px-6 md:px-16">
+    <section className="bg-cream py-32 px-6 md:px-16 overflow-hidden min-h-screen">
       <div className="max-w-5xl mx-auto">
         {/* Section header */}
         <div

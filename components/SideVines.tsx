@@ -1,140 +1,132 @@
 'use client'
 
-/**
- * Persistent creeper vines running down both sides of the page.
- * Features actual leaf shapes, tendrils, and flower buds.
- */
 export default function SideVines() {
   return (
-    <div className="fixed inset-0 pointer-events-none z-[2] overflow-hidden" aria-hidden="true">
-      {/* Left creeper vine */}
+    <div className="fixed inset-0 pointer-events-none z-[2] overflow-hidden hidden md:block" aria-hidden="true">
+      {/* Left ivy creeper */}
       <svg
-        className="absolute left-0 top-0 w-[160px] h-full opacity-[0.22]"
-        viewBox="0 0 160 2000"
+        className="absolute left-0 top-0 w-[100px] h-full"
+        viewBox="0 0 100 2400"
         fill="none"
-        preserveAspectRatio="none"
+        preserveAspectRatio="xMinYMin slice"
+        style={{ opacity: 0.14 }}
       >
-        {/* Main thick stem */}
+        {/* Main trunk — hugs left edge */}
         <path
-          d="M 80 0 C 60 60 90 120 50 200 S 100 350 60 450 S 40 550 90 650 S 50 750 70 850 S 100 950 50 1050 S 40 1150 80 1250 S 60 1350 90 1450 S 50 1550 70 1650 S 100 1750 60 1850 S 50 1950 80 2000"
-          stroke="rgba(139, 157, 119, 1)"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-        {/* Secondary thinner vine intertwining */}
-        <path
-          d="M 70 20 C 90 80 50 150 80 250 S 40 400 70 500 S 100 600 60 700 S 80 800 50 900 S 70 1000 90 1100 S 50 1200 70 1300 S 90 1400 60 1500 S 40 1600 80 1700 S 60 1800 70 1900"
-          stroke="rgba(139, 157, 119, 0.5)"
-          strokeWidth="1.5"
+          d="M 8 0 C 12 80 6 160 10 240 C 14 320 8 400 12 480 C 16 560 6 640 10 720 C 14 800 8 880 12 960 C 16 1040 6 1120 10 1200 C 14 1280 8 1360 12 1440 C 16 1520 6 1600 10 1680 C 14 1760 8 1840 12 1920 C 16 2000 6 2080 10 2160 C 14 2240 8 2320 12 2400"
+          stroke="rgba(87, 107, 71, 1)"
+          strokeWidth="3.5"
           strokeLinecap="round"
         />
 
-        {/* Leaf shapes — actual leaf SVG paths, not circles */}
-        {/* Leaf at y=180 */}
-        <path d="M 55 180 C 35 165 25 170 30 185 C 35 200 55 195 55 180 Z" fill="rgba(139, 157, 119, 0.6)" />
-        <line x1="55" y1="180" x2="32" y2="182" stroke="rgba(139, 157, 119, 0.3)" strokeWidth="0.5" />
+        {/* Branches reaching inward — organic lengths */}
+        <path d="M 10 120 C 20 115 35 118 48 110" stroke="rgba(87, 107, 71, 0.7)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+        <path d="M 12 320 C 22 312 40 316 55 308" stroke="rgba(87, 107, 71, 0.6)" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+        <path d="M 8 520 C 18 514 30 518 42 510" stroke="rgba(87, 107, 71, 0.7)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+        <path d="M 14 700 C 24 694 38 698 52 690" stroke="rgba(87, 107, 71, 0.6)" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+        <path d="M 10 920 C 22 914 36 918 50 910" stroke="rgba(87, 107, 71, 0.7)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+        <path d="M 12 1100 C 24 1094 38 1098 54 1088" stroke="rgba(87, 107, 71, 0.6)" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+        <path d="M 8 1320 C 20 1312 34 1316 48 1308" stroke="rgba(87, 107, 71, 0.7)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+        <path d="M 14 1500 C 26 1494 40 1498 56 1488" stroke="rgba(87, 107, 71, 0.6)" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+        <path d="M 10 1720 C 22 1714 36 1718 50 1708" stroke="rgba(87, 107, 71, 0.7)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+        <path d="M 12 1900 C 24 1892 40 1896 56 1886" stroke="rgba(87, 107, 71, 0.6)" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+        <path d="M 8 2120 C 20 2112 34 2116 50 2106" stroke="rgba(87, 107, 71, 0.7)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
 
-        {/* Leaf at y=350 */}
-        <path d="M 85 350 C 105 335 115 340 110 355 C 105 370 85 365 85 350 Z" fill="rgba(139, 157, 119, 0.5)" />
-        <line x1="85" y1="350" x2="108" y2="352" stroke="rgba(139, 157, 119, 0.3)" strokeWidth="0.5" />
+        {/* Ivy leaves — pointed teardrop shapes at branch tips */}
+        <path d="M 48 110 C 58 102 62 108 56 116 C 50 120 46 116 48 110 Z" fill="rgba(87, 107, 71, 0.7)" />
+        <path d="M 42 108 C 48 98 54 102 50 112 C 46 118 40 114 42 108 Z" fill="rgba(87, 107, 71, 0.5)" />
 
-        {/* Leaf at y=500 */}
-        <path d="M 65 500 C 40 485 30 490 38 508 C 46 526 65 518 65 500 Z" fill="rgba(196, 112, 110, 0.4)" />
+        <path d="M 55 308 C 65 300 70 306 64 314 C 58 320 53 314 55 308 Z" fill="rgba(87, 107, 71, 0.6)" />
 
-        {/* Tendril curl at y=600 */}
-        <path d="M 88 620 C 100 610 110 615 108 625 C 106 635 95 630 100 620" stroke="rgba(139, 157, 119, 0.4)" strokeWidth="1" fill="none" />
+        <path d="M 42 510 C 52 502 56 508 50 516 C 44 520 40 516 42 510 Z" fill="rgba(87, 107, 71, 0.7)" />
+        <path d="M 36 508 C 42 498 48 502 44 512 C 40 518 34 514 36 508 Z" fill="rgba(87, 107, 71, 0.4)" />
 
-        {/* Leaf at y=700 */}
-        <path d="M 50 700 C 25 685 15 692 25 710 C 35 728 50 718 50 700 Z" fill="rgba(139, 157, 119, 0.55)" />
-        <line x1="50" y1="700" x2="28" y2="705" stroke="rgba(139, 157, 119, 0.3)" strokeWidth="0.5" />
+        <path d="M 52 690 C 62 682 66 688 60 696 C 54 700 50 696 52 690 Z" fill="rgba(87, 107, 71, 0.6)" />
 
-        {/* Small flower bud at y=850 */}
-        <circle cx="70" cy="845" r="5" fill="rgba(196, 112, 110, 0.35)" />
-        <circle cx="65" cy="840" r="3" fill="rgba(196, 112, 110, 0.25)" />
-        <circle cx="75" cy="842" r="3" fill="rgba(196, 112, 110, 0.25)" />
+        <path d="M 50 910 C 60 902 64 908 58 916 C 52 920 48 916 50 910 Z" fill="rgba(87, 107, 71, 0.7)" />
+        <path d="M 44 908 C 50 898 56 902 52 912 C 48 918 42 914 44 908 Z" fill="rgba(87, 107, 71, 0.45)" />
 
-        {/* Leaf at y=950 */}
-        <path d="M 55 950 C 30 935 20 942 30 960 C 40 978 55 968 55 950 Z" fill="rgba(139, 157, 119, 0.5)" />
+        <path d="M 54 1088 C 64 1080 68 1086 62 1094 C 56 1098 52 1094 54 1088 Z" fill="rgba(87, 107, 71, 0.6)" />
 
-        {/* Tendril curl at y=1050 */}
-        <path d="M 82 1050 C 95 1040 105 1045 102 1055 C 99 1065 88 1058 92 1048" stroke="rgba(139, 157, 119, 0.4)" strokeWidth="1" fill="none" />
+        <path d="M 48 1308 C 58 1300 62 1306 56 1314 C 50 1318 46 1314 48 1308 Z" fill="rgba(87, 107, 71, 0.65)" />
+        <path d="M 42 1306 C 48 1296 54 1300 50 1310 C 46 1316 40 1312 42 1306 Z" fill="rgba(87, 107, 71, 0.4)" />
 
-        {/* Leaf at y=1200 */}
-        <path d="M 78 1200 C 100 1185 110 1192 102 1210 C 94 1228 78 1218 78 1200 Z" fill="rgba(212, 168, 67, 0.4)" />
-        <line x1="78" y1="1200" x2="100" y2="1205" stroke="rgba(212, 168, 67, 0.2)" strokeWidth="0.5" />
+        <path d="M 56 1488 C 66 1480 70 1486 64 1494 C 58 1498 54 1494 56 1488 Z" fill="rgba(87, 107, 71, 0.6)" />
 
-        {/* Leaf at y=1400 */}
-        <path d="M 60 1400 C 35 1385 25 1392 35 1410 C 45 1428 60 1418 60 1400 Z" fill="rgba(139, 157, 119, 0.5)" />
+        <path d="M 50 1708 C 60 1700 64 1706 58 1714 C 52 1718 48 1714 50 1708 Z" fill="rgba(87, 107, 71, 0.7)" />
 
-        {/* Flower bud at y=1550 */}
-        <circle cx="75" cy="1545" r="6" fill="rgba(212, 168, 67, 0.3)" />
-        <circle cx="68" cy="1540" r="3.5" fill="rgba(212, 168, 67, 0.2)" />
-        <circle cx="80" cy="1540" r="3.5" fill="rgba(212, 168, 67, 0.2)" />
+        <path d="M 56 1886 C 66 1878 70 1884 64 1892 C 58 1896 54 1892 56 1886 Z" fill="rgba(87, 107, 71, 0.55)" />
+        <path d="M 50 1884 C 56 1874 62 1878 58 1888 C 54 1894 48 1890 50 1884 Z" fill="rgba(87, 107, 71, 0.35)" />
 
-        {/* Leaf at y=1700 */}
-        <path d="M 70 1700 C 45 1685 35 1692 45 1710 C 55 1728 70 1718 70 1700 Z" fill="rgba(139, 157, 119, 0.55)" />
-        <line x1="70" y1="1700" x2="48" y2="1705" stroke="rgba(139, 157, 119, 0.3)" strokeWidth="0.5" />
+        <path d="M 50 2106 C 60 2098 64 2104 58 2112 C 52 2116 48 2112 50 2106 Z" fill="rgba(87, 107, 71, 0.6)" />
 
-        {/* Leaf at y=1900 */}
-        <path d="M 60 1900 C 80 1885 90 1892 82 1910 C 74 1928 60 1918 60 1900 Z" fill="rgba(196, 112, 110, 0.4)" />
+        {/* Curling tendrils — thin spirals */}
+        <path d="M 10 200 C 18 195 22 200 20 206 C 18 210 14 208 16 203" stroke="rgba(87, 107, 71, 0.4)" strokeWidth="0.8" fill="none" />
+        <path d="M 12 600 C 20 595 24 600 22 606 C 20 610 16 608 18 603" stroke="rgba(87, 107, 71, 0.35)" strokeWidth="0.8" fill="none" />
+        <path d="M 10 1000 C 18 995 22 1000 20 1006 C 18 1010 14 1008 16 1003" stroke="rgba(87, 107, 71, 0.4)" strokeWidth="0.8" fill="none" />
+        <path d="M 12 1400 C 20 1395 24 1400 22 1406 C 20 1410 16 1408 18 1403" stroke="rgba(87, 107, 71, 0.35)" strokeWidth="0.8" fill="none" />
+        <path d="M 10 1800 C 18 1795 22 1800 20 1806 C 18 1810 14 1808 16 1803" stroke="rgba(87, 107, 71, 0.4)" strokeWidth="0.8" fill="none" />
       </svg>
 
-      {/* Right creeper vine — mirrored */}
+      {/* Right ivy creeper — mirrored, slightly different rhythm */}
       <svg
-        className="absolute right-0 top-0 w-[160px] h-full opacity-[0.22]"
-        viewBox="0 0 160 2000"
+        className="absolute right-0 top-0 w-[100px] h-full"
+        viewBox="0 0 100 2400"
         fill="none"
-        preserveAspectRatio="none"
-        style={{ transform: 'scaleX(-1)' }}
+        preserveAspectRatio="xMaxYMin slice"
+        style={{ opacity: 0.14, transform: 'scaleX(-1)' }}
       >
-        {/* Main thick stem */}
+        {/* Main trunk */}
         <path
-          d="M 80 30 C 60 90 90 160 50 250 S 100 380 60 480 S 40 590 90 690 S 50 790 70 890 S 100 990 50 1090 S 40 1190 80 1290 S 60 1390 90 1490 S 50 1590 70 1690 S 100 1790 60 1890 S 50 1950 80 2000"
-          stroke="rgba(196, 112, 110, 0.8)"
+          d="M 8 40 C 12 120 6 200 10 280 C 14 360 8 440 12 520 C 16 600 6 680 10 760 C 14 840 8 920 12 1000 C 16 1080 6 1160 10 1240 C 14 1320 8 1400 12 1480 C 16 1560 6 1640 10 1720 C 14 1800 8 1880 12 1960 C 16 2040 6 2120 10 2200 C 14 2280 8 2360 12 2400"
+          stroke="rgba(140, 90, 85, 0.9)"
           strokeWidth="3"
           strokeLinecap="round"
         />
-        {/* Secondary vine */}
-        <path
-          d="M 70 50 C 90 110 50 190 80 290 S 40 430 70 540 S 100 640 60 740 S 80 840 50 940 S 70 1040 90 1140 S 50 1240 70 1340 S 90 1440 60 1540 S 40 1640 80 1740 S 60 1840 70 1940"
-          stroke="rgba(196, 112, 110, 0.4)"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
 
-        {/* Leaves — rose-colored theme */}
-        <path d="M 55 230 C 35 215 25 222 33 240 C 41 258 55 248 55 230 Z" fill="rgba(196, 112, 110, 0.5)" />
-        <line x1="55" y1="230" x2="35" y2="235" stroke="rgba(196, 112, 110, 0.25)" strokeWidth="0.5" />
+        {/* Branches */}
+        <path d="M 10 180 C 22 174 36 178 50 168" stroke="rgba(140, 90, 85, 0.6)" strokeWidth="1.3" strokeLinecap="round" fill="none" />
+        <path d="M 12 400 C 24 392 40 396 56 386" stroke="rgba(140, 90, 85, 0.55)" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+        <path d="M 8 600 C 20 594 34 598 48 588" stroke="rgba(140, 90, 85, 0.6)" strokeWidth="1.3" strokeLinecap="round" fill="none" />
+        <path d="M 14 800 C 26 794 40 798 54 788" stroke="rgba(140, 90, 85, 0.55)" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+        <path d="M 10 1020 C 22 1014 36 1018 52 1008" stroke="rgba(140, 90, 85, 0.6)" strokeWidth="1.3" strokeLinecap="round" fill="none" />
+        <path d="M 12 1220 C 24 1212 40 1216 56 1206" stroke="rgba(140, 90, 85, 0.55)" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+        <path d="M 8 1440 C 22 1432 36 1436 50 1426" stroke="rgba(140, 90, 85, 0.6)" strokeWidth="1.3" strokeLinecap="round" fill="none" />
+        <path d="M 14 1640 C 26 1632 42 1636 58 1626" stroke="rgba(140, 90, 85, 0.55)" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+        <path d="M 10 1860 C 24 1852 38 1856 52 1846" stroke="rgba(140, 90, 85, 0.6)" strokeWidth="1.3" strokeLinecap="round" fill="none" />
+        <path d="M 12 2080 C 24 2072 40 2076 56 2066" stroke="rgba(140, 90, 85, 0.55)" strokeWidth="1.2" strokeLinecap="round" fill="none" />
 
-        <path d="M 85 420 C 105 405 115 412 107 430 C 99 448 85 438 85 420 Z" fill="rgba(196, 112, 110, 0.45)" />
+        {/* Ivy leaves at branch tips */}
+        <path d="M 50 168 C 60 160 64 166 58 174 C 52 178 48 174 50 168 Z" fill="rgba(140, 90, 85, 0.6)" />
+        <path d="M 44 166 C 50 156 56 160 52 170 C 48 176 42 172 44 166 Z" fill="rgba(140, 90, 85, 0.4)" />
 
-        <path d="M 50 600 C 25 585 18 592 28 610 C 38 628 50 618 50 600 Z" fill="rgba(212, 168, 67, 0.4)" />
-        <line x1="50" y1="600" x2="30" y2="604" stroke="rgba(212, 168, 67, 0.2)" strokeWidth="0.5" />
+        <path d="M 56 386 C 66 378 70 384 64 392 C 58 396 54 392 56 386 Z" fill="rgba(140, 90, 85, 0.55)" />
 
-        {/* Tendril */}
-        <path d="M 88 750 C 100 740 110 745 108 755 C 106 765 95 760 100 750" stroke="rgba(196, 112, 110, 0.35)" strokeWidth="1" fill="none" />
+        <path d="M 48 588 C 58 580 62 586 56 594 C 50 598 46 594 48 588 Z" fill="rgba(140, 90, 85, 0.6)" />
+        <path d="M 42 586 C 48 576 54 580 50 590 C 46 596 40 592 42 586 Z" fill="rgba(140, 90, 85, 0.35)" />
 
-        <path d="M 60 880 C 35 865 25 872 35 890 C 45 908 60 898 60 880 Z" fill="rgba(196, 112, 110, 0.5)" />
+        <path d="M 54 788 C 64 780 68 786 62 794 C 56 798 52 794 54 788 Z" fill="rgba(140, 90, 85, 0.55)" />
 
-        {/* Flower bud */}
-        <circle cx="72" cy="1020" r="5" fill="rgba(139, 157, 119, 0.35)" />
-        <circle cx="66" cy="1015" r="3" fill="rgba(139, 157, 119, 0.25)" />
-        <circle cx="78" cy="1017" r="3" fill="rgba(139, 157, 119, 0.25)" />
+        <path d="M 52 1008 C 62 1000 66 1006 60 1014 C 54 1018 50 1014 52 1008 Z" fill="rgba(140, 90, 85, 0.6)" />
 
-        <path d="M 80 1180 C 100 1165 110 1172 102 1190 C 94 1208 80 1198 80 1180 Z" fill="rgba(196, 112, 110, 0.45)" />
-        <line x1="80" y1="1180" x2="98" y2="1185" stroke="rgba(196, 112, 110, 0.25)" strokeWidth="0.5" />
+        <path d="M 56 1206 C 66 1198 70 1204 64 1212 C 58 1216 54 1212 56 1206 Z" fill="rgba(140, 90, 85, 0.5)" />
+        <path d="M 50 1204 C 56 1194 62 1198 58 1208 C 54 1214 48 1210 50 1204 Z" fill="rgba(140, 90, 85, 0.3)" />
 
-        <path d="M 55 1380 C 30 1365 22 1372 32 1390 C 42 1408 55 1398 55 1380 Z" fill="rgba(212, 168, 67, 0.4)" />
+        <path d="M 50 1426 C 60 1418 64 1424 58 1432 C 52 1436 48 1432 50 1426 Z" fill="rgba(140, 90, 85, 0.6)" />
 
-        {/* Flower bud */}
-        <circle cx="68" cy="1550" r="6" fill="rgba(196, 112, 110, 0.3)" />
-        <circle cx="62" cy="1544" r="3.5" fill="rgba(196, 112, 110, 0.2)" />
-        <circle cx="75" cy="1546" r="3.5" fill="rgba(196, 112, 110, 0.2)" />
+        <path d="M 58 1626 C 68 1618 72 1624 66 1632 C 60 1636 56 1632 58 1626 Z" fill="rgba(140, 90, 85, 0.55)" />
 
-        <path d="M 70 1720 C 45 1705 38 1712 48 1730 C 58 1748 70 1738 70 1720 Z" fill="rgba(139, 157, 119, 0.5)" />
-        <line x1="70" y1="1720" x2="50" y2="1725" stroke="rgba(139, 157, 119, 0.25)" strokeWidth="0.5" />
+        <path d="M 52 1846 C 62 1838 66 1844 60 1852 C 54 1856 50 1852 52 1846 Z" fill="rgba(140, 90, 85, 0.6)" />
+        <path d="M 46 1844 C 52 1834 58 1838 54 1848 C 50 1854 44 1850 46 1844 Z" fill="rgba(140, 90, 85, 0.35)" />
 
-        <path d="M 60 1900 C 80 1885 90 1892 82 1910 C 74 1928 60 1918 60 1900 Z" fill="rgba(196, 112, 110, 0.45)" />
+        <path d="M 56 2066 C 66 2058 70 2064 64 2072 C 58 2076 54 2072 56 2066 Z" fill="rgba(140, 90, 85, 0.55)" />
+
+        {/* Tendrils */}
+        <path d="M 10 300 C 18 295 22 300 20 306 C 18 310 14 308 16 303" stroke="rgba(140, 90, 85, 0.35)" strokeWidth="0.8" fill="none" />
+        <path d="M 12 700 C 20 695 24 700 22 706 C 20 710 16 708 18 703" stroke="rgba(140, 90, 85, 0.3)" strokeWidth="0.8" fill="none" />
+        <path d="M 10 1100 C 18 1095 22 1100 20 1106 C 18 1110 14 1108 16 1103" stroke="rgba(140, 90, 85, 0.35)" strokeWidth="0.8" fill="none" />
+        <path d="M 12 1540 C 20 1535 24 1540 22 1546 C 20 1550 16 1548 18 1543" stroke="rgba(140, 90, 85, 0.3)" strokeWidth="0.8" fill="none" />
+        <path d="M 10 1960 C 18 1955 22 1960 20 1966 C 18 1970 14 1968 16 1963" stroke="rgba(140, 90, 85, 0.35)" strokeWidth="0.8" fill="none" />
       </svg>
     </div>
   )

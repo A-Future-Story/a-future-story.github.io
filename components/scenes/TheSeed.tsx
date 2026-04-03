@@ -13,6 +13,15 @@ export default function TheSeed() {
   const textOverlayRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef(0)
   const petalsRef = useRef<ReturnType<typeof createPetals>>([])
+  const isDarkRef = useRef(false)
+
+  useEffect(() => {
+    const check = () => { isDarkRef.current = document.documentElement.classList.contains('dark') }
+    check()
+    const observer = new MutationObserver(check)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const container = containerRef.current
@@ -81,7 +90,7 @@ export default function TheSeed() {
       if (isVisible) {
         const w = canvas!.width / dpr
         const h = canvas!.height / dpr
-        drawBloom(ctx!, petalsRef.current, progressRef.current, w, h)
+        drawBloom(ctx!, petalsRef.current, progressRef.current, w, h, isDarkRef.current ? '#0F0D13' : '#FAF7F2')
       }
 
       rafId = requestAnimationFrame(render)

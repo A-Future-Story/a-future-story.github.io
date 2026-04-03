@@ -9,11 +9,23 @@ gsap.registerPlugin(ScrollTrigger)
 export default function TheDeepening() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const textRef = useRef<HTMLHeadingElement>(null)
+  const isDarkRef = useRef(false)
 
   useEffect(() => {
     const section = sectionRef.current
     const text = textRef.current
     if (!section || !text) return
+
+    // Watch for dark mode changes via ref (no re-render, no timeline rebuild)
+    isDarkRef.current = document.documentElement.classList.contains('dark')
+    const observer = new MutationObserver(() => {
+      isDarkRef.current = document.documentElement.classList.contains('dark')
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+
+    const startBg = isDarkRef.current ? '#0F0D13' : '#FAF7F2'
+    const midBg = isDarkRef.current ? '#1A1816' : '#3A3530'
+    const endBg = '#1C1915'
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -26,15 +38,15 @@ export default function TheDeepening() {
       },
     })
 
-    // Two-step bg: ivory → warm purple → deep fig (avoids grey midpoint)
+    // Two-step bg: ivory → warm charcoal → deep warm black
     tl.fromTo(
       section,
-      { backgroundColor: '#FAF7F2' },
-      { backgroundColor: '#5E3A5E', duration: 0.5, ease: 'none' },
+      { backgroundColor: startBg },
+      { backgroundColor: midBg, duration: 0.5, ease: 'none' },
     )
     tl.to(
       section,
-      { backgroundColor: '#2D1B3D', duration: 0.5, ease: 'none' },
+      { backgroundColor: endBg, duration: 0.5, ease: 'none' },
     )
 
     tl.fromTo(
@@ -45,6 +57,7 @@ export default function TheDeepening() {
     )
 
     return () => {
+      observer.disconnect()
       tl.scrollTrigger?.kill()
       tl.kill()
     }
@@ -53,7 +66,7 @@ export default function TheDeepening() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen w-full flex items-center justify-center bg-ivory"
+      className="relative h-screen w-full flex items-center justify-center"
     >
       <h2
         ref={textRef}

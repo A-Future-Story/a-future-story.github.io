@@ -1,3 +1,7 @@
+'use client'
+
+import CopyEmail from '@/components/CopyEmail'
+
 export default function TheInvitation() {
   return (
     <section className="relative min-h-screen w-full bg-ivory flex flex-col items-center justify-center px-8">
@@ -18,18 +22,15 @@ export default function TheInvitation() {
         >
           Explore Helpexa
         </a>
-        <a
-          href="mailto:contact@skynift.com"
-          className="font-sans text-walnut/50 hover:text-walnut transition-colors flex items-center gap-2"
-        >
+        <CopyEmail className="font-sans text-walnut/50 hover:text-walnut transition-colors flex items-center gap-2">
           Talk to us
           <span aria-hidden="true">&rarr;</span>
-        </a>
+        </CopyEmail>
       </div>
 
-      <a href="mailto:contact@skynift.com" className="font-sans text-sm text-walnut/30 hover:text-walnut/50 transition-colors">
+      <CopyEmail className="font-sans text-sm text-walnut/30 hover:text-walnut/50 transition-colors">
         contact@skynift.com
-      </a>
+      </CopyEmail>
 
       {/* Company footer — credibility signals */}
       <div className="mt-20 pt-12 border-t border-walnut/5 w-full max-w-4xl">

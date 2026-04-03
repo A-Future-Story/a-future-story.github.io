@@ -52,13 +52,16 @@ export function drawMarkitectBloom(
   progress: number,
   width: number,
   height: number,
+  isDark: boolean = false,
 ) {
   ctx.clearRect(0, 0, width, height)
 
   const bgProgress = Math.max(0, (progress - 0.7) / 0.3)
-  const r = Math.round(45 + bgProgress * (240 - 45))
-  const g = Math.round(27 + bgProgress * (232 - 27))
-  const b = Math.round(61 + bgProgress * (216 - 61))
+  const startR = isDark ? 28 : 28, startG = isDark ? 25 : 25, startB = isDark ? 21 : 21
+  const endR = isDark ? 15 : 240, endG = isDark ? 13 : 232, endB = isDark ? 19 : 216
+  const r = Math.round(startR + bgProgress * (endR - startR))
+  const g = Math.round(startG + bgProgress * (endG - startG))
+  const b = Math.round(startB + bgProgress * (endB - startB))
   ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
   ctx.fillRect(0, 0, width, height)
 
@@ -76,7 +79,7 @@ export function drawMarkitectBloom(
 
     const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, petal.size)
     gradient.addColorStop(0, petal.color)
-    gradient.addColorStop(1, 'rgba(45, 27, 61, 0)')
+    gradient.addColorStop(1, 'rgba(28, 25, 21, 0)')
 
     ctx.fillStyle = gradient
     drawPolygon(ctx, petal.sides, petal.size)

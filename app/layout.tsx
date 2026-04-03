@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { serif, sans } from '@/lib/fonts'
 import SmoothScroll from '@/components/SmoothScroll'
 import Navbar from '@/components/Navbar'
-import SideVines from '@/components/SideVines'
 import FloatingCreatures from '@/components/FloatingCreatures'
 import './globals.css'
 
@@ -17,7 +16,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SmoothScroll>
           <Navbar />
-          <SideVines />
           <FloatingCreatures />
           {children}
         </SmoothScroll>

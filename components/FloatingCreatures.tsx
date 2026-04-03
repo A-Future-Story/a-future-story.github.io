@@ -82,7 +82,7 @@ interface Creature {
 const PALETTE = [
   'rgba(139, 157, 119, 1)',  // sage
   'rgba(196, 112, 110, 1)',  // rose
-  'rgba(212, 168, 67, 1)',   // gold
+  'rgba(220, 175, 55, 1)',   // gold (vibrant)
   'rgba(44, 24, 16, 1)',     // walnut
   'rgba(201, 150, 58, 1)',   // drac gold
 ]
@@ -114,6 +114,13 @@ const creatures: Creature[] = [
   { type: 'seedpod', x: 88, y: 15, size: 18, color: PALETTE[0], speed: 0.3, rotation: 0 },
   { type: 'seedpod', x: 4, y: 80, size: 20, color: PALETTE[1], speed: 0.2, rotation: 0 },
   { type: 'seedpod', x: 94, y: 55, size: 16, color: PALETTE[2], speed: 0.25, rotation: 0 },
+  // Extra gold accents — evenly distributed
+  { type: 'seedpod', x: 15, y: 5, size: 22, color: PALETTE[2], speed: 0.4, rotation: 0 },
+  { type: 'seedpod', x: 82, y: 20, size: 18, color: PALETTE[4], speed: 0.35, rotation: 0 },
+  { type: 'seedpod', x: 10, y: 40, size: 20, color: PALETTE[2], speed: 0.45, rotation: 0 },
+  { type: 'seedpod', x: 90, y: 50, size: 16, color: PALETTE[4], speed: 0.4, rotation: 0 },
+  { type: 'seedpod', x: 8, y: 70, size: 22, color: PALETTE[2], speed: 0.38, rotation: 0 },
+  { type: 'seedpod', x: 85, y: 85, size: 18, color: PALETTE[4], speed: 0.42, rotation: 0 },
 ]
 
 export default function FloatingCreatures() {
@@ -121,42 +128,33 @@ export default function FloatingCreatures() {
   const itemsRef = useRef<(HTMLDivElement | null)[]>([])
 
   useEffect(() => {
-    const tweens: gsap.core.Tween[] = []
+    // Single rAF loop handles both scroll parallax + gentle float
+    // No GSAP — avoids transform conflicts
+    let rafId: number
 
-    itemsRef.current.forEach((el, i) => {
-      if (!el) return
-      const c = creatures[i]
+    function animate() {
+      const scrollY = window.scrollY
+      const maxScroll = document.body.scrollHeight - window.innerHeight
+      const progress = maxScroll > 0 ? scrollY / maxScroll : 0
+      const time = Date.now() / 1000
 
-      // Parallax: move Y based on scroll at different speeds
-      const tween = gsap.to(el, {
-        y: () => -(window.innerHeight * c.speed * 2),
-        ease: 'none',
-        scrollTrigger: {
-          trigger: document.body,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1,
-        },
+      itemsRef.current.forEach((el, i) => {
+        if (!el || !creatures[i]) return
+        const c = creatures[i]
+        // Scroll-driven Y offset (moves up as user scrolls down)
+        const yOffset = -(progress * window.innerHeight * c.speed * 3)
+        // Gentle floating X wobble
+        const xFloat = Math.sin(time * 0.5 + i * 1.7) * 10
+        // Gentle rotation wobble
+        const rotFloat = c.rotation + Math.sin(time * 0.3 + i * 2.1) * 6
+        el.style.transform = `translate(${xFloat}px, ${yOffset}px) rotate(${rotFloat}deg)`
       })
-      tweens.push(tween)
 
-      // Gentle floating animation (independent of scroll)
-      gsap.to(el, {
-        x: `+=${8 + Math.random() * 12}`,
-        rotation: c.rotation + (Math.random() > 0.5 ? 8 : -8),
-        duration: 3 + Math.random() * 4,
-        ease: 'sine.inOut',
-        repeat: -1,
-        yoyo: true,
-      })
-    })
-
-    return () => {
-      tweens.forEach(t => {
-        t.scrollTrigger?.kill()
-        t.kill()
-      })
+      rafId = requestAnimationFrame(animate)
     }
+    animate()
+
+    return () => cancelAnimationFrame(rafId)
   }, [])
 
   return (
