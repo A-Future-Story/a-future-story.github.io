@@ -37,7 +37,9 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
         lerp: 0.1,
         duration: 1.2,
         smoothWheel: true,
-        syncTouch: false,
+        syncTouch: true,
+        touchMultiplier: 2,
+        wheelMultiplier: 1,
       }}
     >
       {children}

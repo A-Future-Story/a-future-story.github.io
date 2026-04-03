@@ -8,14 +8,10 @@ import FlowPanel from '@/components/FlowPanel'
 gsap.registerPlugin(ScrollTrigger)
 
 const STEPS = [
-  { title: 'Paste your URL', description: 'Drop in your landing page and let AI understand your product.' },
-  { title: 'AI analyses everything', description: 'Key details extracted. Ad strategy formed. Automatically.' },
-  { title: 'Headlines generated', description: 'Multiple variations, optimised for each platform.' },
-  { title: 'Choose your platforms', description: 'Google Ads, Meta, Instagram — all from one place.' },
-  { title: 'One click to publish', description: 'Your campaign goes live across every selected platform.' },
-  { title: 'Smart targeting', description: 'AI finds your audience by demographics, interests, and behaviour.' },
-  { title: 'AI Budget Flow', description: 'Spend distributed intelligently based on real-time performance.' },
-  { title: 'Watch it perform', description: 'Track results with detailed analytics and AI recommendations.' },
+  { title: 'Paste your URL', description: 'Drop in your landing page. AI extracts key details and forms your ad strategy.' },
+  { title: 'AI generates everything', description: 'Headlines, descriptions, audience targeting — crafted for Google Ads and Meta simultaneously.' },
+  { title: 'One click to publish', description: 'Your campaign goes live across platforms with smart budget distribution.' },
+  { title: 'Watch it perform', description: 'Real-time analytics, AI-driven optimisations, and detailed performance reports.' },
 ]
 
 export default function MarkitectFlow() {

@@ -6,7 +6,7 @@ interface FlowPanelProps {
 
 export default function FlowPanel({ step, title, description }: FlowPanelProps) {
   return (
-    <div className="w-screen h-screen flex-shrink-0 flex flex-col items-center justify-center px-8">
+    <div className="w-screen h-[80vh] flex-shrink-0 flex flex-col items-center justify-center px-8">
       <span className="font-sans text-sm tracking-widest uppercase text-drac-amber/50 mb-4">
         Step {step}
       </span>
