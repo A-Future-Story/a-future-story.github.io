@@ -15,9 +15,25 @@
   --font-family-sans: var(--font-sans), 'DM Sans', system-ui, sans-serif;
 }
 
+/* Hide scrollbar by default, show on scroll (modern style) */
 html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(44, 24, 16, 0.15) transparent;
   background-color: var(--color-ivory);
   color: var(--color-walnut);
+}
+html::-webkit-scrollbar {
+  width: 6px;
+}
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+html::-webkit-scrollbar-thumb {
+  background-color: rgba(44, 24, 16, 0.15);
+  border-radius: 3px;
+}
+html::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(44, 24, 16, 0.3);
 }
 
 body {

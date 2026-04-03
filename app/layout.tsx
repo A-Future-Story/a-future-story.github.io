@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { serif, sans } from '@/lib/fonts'
 import SmoothScroll from '@/components/SmoothScroll'
+import Navbar from '@/components/Navbar'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -12,7 +13,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${serif.variable} ${sans.variable}`}>
       <body>
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          <Navbar />
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   )

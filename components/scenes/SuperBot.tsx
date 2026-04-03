@@ -55,6 +55,17 @@ export default function SuperBotScene() {
           Your AI that actually<br />
           <span className="text-drac-gold">knows your business</span>
         </h2>
+        <div className="mt-8 space-y-3">
+          <p className="font-sans text-sm text-fig/40 flex items-center gap-2">
+            <span className="text-drac-gold">✦</span> Trained on your own documents and data
+          </p>
+          <p className="font-sans text-sm text-fig/40 flex items-center gap-2">
+            <span className="text-drac-gold">✦</span> 50+ languages with auto-detection
+          </p>
+          <p className="font-sans text-sm text-fig/40 flex items-center gap-2">
+            <span className="text-drac-gold">✦</span> Live in 5 minutes with one line of code
+          </p>
+        </div>
       </div>
 
       <div className="w-full md:w-1/2 flex items-center justify-center px-6 md:px-8">

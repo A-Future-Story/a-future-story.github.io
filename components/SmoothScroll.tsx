@@ -13,16 +13,17 @@ function ScrollSync() {
   useEffect(() => {
     if (!lenis) return
 
-    lenis.on('scroll', ScrollTrigger.update)
+    const l = lenis
+    l.on('scroll', ScrollTrigger.update)
 
     function update(time: number) {
-      lenis.raf(time * 1000)
+      l.raf(time * 1000)
     }
     gsap.ticker.add(update)
     gsap.ticker.lagSmoothing(0)
 
     return () => {
-      lenis.off('scroll', ScrollTrigger.update)
+      l.off('scroll', ScrollTrigger.update)
       gsap.ticker.remove(update)
     }
   }, [lenis])

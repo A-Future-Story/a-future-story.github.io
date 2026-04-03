@@ -71,7 +71,7 @@ export default function HelpexaPetal() {
 
       {/* Site preview */}
       <div ref={ref} className="max-w-4xl mx-auto mb-16 opacity-0">
-        <div className="rounded-2xl overflow-hidden border border-walnut/5 shadow-[0_8px_60px_rgba(44,24,16,0.08)]">
+        <a href="https://helpexa.com" target="_blank" rel="noopener noreferrer" className="block rounded-2xl overflow-hidden border border-walnut/5 shadow-[0_8px_60px_rgba(44,24,16,0.08)] hover:shadow-[0_12px_80px_rgba(44,24,16,0.12)] transition-shadow">
           <Image
             src="/previews/helpexa.png"
             alt="Helpexa landing page preview"
@@ -79,7 +79,7 @@ export default function HelpexaPetal() {
             height={900}
             className="w-full h-auto"
           />
-        </div>
+        </a>
       </div>
 
       {/* How it works — 3 steps */}

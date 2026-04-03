@@ -93,6 +93,13 @@ export default function DracArrives() {
         AI-powered business intelligence
       </p>
 
+      <div className="max-w-xl text-center mt-6 px-6">
+        <p className="font-sans text-sm text-cream/40 leading-relaxed">
+          Two products. One mission. Automate customer support with SuperBot.
+          Launch ad campaigns with Markitect. All powered by AI that learns your business.
+        </p>
+      </div>
+
       {/* Branch split — SuperBot (left) vs Markitect (right, larger) */}
       <div className="mt-12 w-full max-w-3xl px-8">
         <svg

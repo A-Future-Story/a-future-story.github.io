@@ -106,6 +106,11 @@ export default function TheSeed() {
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
       />
+      {/* Floating ambient text — visible on load */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
+        <p className="font-serif text-[clamp(2rem,5vw,4rem)] text-walnut/20 mb-2">Skynift</p>
+        <p className="font-sans text-sm text-walnut/15 tracking-widest uppercase">Intelligence that grows with you</p>
+      </div>
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-pulse z-10">
         <span className="font-sans text-xs tracking-widest uppercase text-walnut/30">Scroll</span>

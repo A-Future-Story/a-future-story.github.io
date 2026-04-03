@@ -8,42 +8,44 @@ gsap.registerPlugin(ScrollTrigger)
 
 interface VineProps {
   className?: string
-  direction?: 'left' | 'right' | 'center'
+  variant?: 'wide' | 'tall' | 'sprawl'
   color?: string
 }
 
-export default function VineDecoration({ className = '', direction = 'right', color = 'rgba(139, 157, 119, 0.2)' }: VineProps) {
+export default function VineDecoration({ className = '', variant = 'wide', color = 'rgba(139, 157, 119, 0.25)' }: VineProps) {
   const svgRef = useRef<SVGSVGElement>(null)
-  const pathRef = useRef<SVGPathElement>(null)
-  const leafRefs = useRef<(SVGCircleElement | null)[]>([])
+  const pathsRef = useRef<(SVGPathElement | null)[]>([])
+  const leavesRef = useRef<(SVGElement | null)[]>([])
 
   useEffect(() => {
     const svg = svgRef.current
-    const path = pathRef.current
-    if (!svg || !path) return
-
-    const length = path.getTotalLength()
-    path.style.strokeDasharray = `${length}`
-    path.style.strokeDashoffset = `${length}`
+    if (!svg) return
 
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: svg,
-        start: 'top 90%',
-        end: 'bottom 20%',
+        start: 'top 95%',
+        end: 'bottom 10%',
         scrub: 1,
       },
     })
 
-    tl.to(path, { strokeDashoffset: 0, duration: 1, ease: 'none' })
+    // Draw all vine paths
+    pathsRef.current.forEach((path, i) => {
+      if (!path) return
+      const length = path.getTotalLength()
+      path.style.strokeDasharray = `${length}`
+      path.style.strokeDashoffset = `${length}`
+      tl.to(path, { strokeDashoffset: 0, duration: 0.6, ease: 'none' }, i * 0.1)
+    })
 
-    // Animate leaf buds
-    leafRefs.current.forEach((leaf, i) => {
+    // Pop in leaves/buds
+    leavesRef.current.forEach((leaf, i) => {
       if (!leaf) return
       tl.fromTo(leaf,
-        { scale: 0, transformOrigin: 'center' },
-        { scale: 1, duration: 0.2 },
-        0.2 + i * 0.15
+        { scale: 0, opacity: 0, transformOrigin: 'center' },
+        { scale: 1, opacity: 1, duration: 0.15 },
+        0.15 + i * 0.06
       )
     })
 
@@ -53,50 +55,78 @@ export default function VineDecoration({ className = '', direction = 'right', co
     }
   }, [])
 
-  const isRight = direction === 'right'
-  const isCenter = direction === 'center'
+  const darkerColor = color.replace(/[\d.]+\)$/, '0.4)')
+  const lighterColor = color.replace(/[\d.]+\)$/, '0.15)')
 
-  // Different vine paths based on direction
-  const vinePath = isCenter
-    ? 'M 200 0 C 200 30 180 50 190 80 S 220 110 200 140 S 170 170 200 200'
-    : isRight
-    ? 'M 0 0 C 40 20 60 50 80 80 S 120 130 160 150 S 220 180 280 200 S 340 210 400 200'
-    : 'M 400 0 C 360 20 340 50 320 80 S 280 130 240 150 S 180 180 120 200 S 60 210 0 200'
+  if (variant === 'tall') {
+    return (
+      <svg ref={svgRef} className={`w-full pointer-events-none ${className}`} viewBox="0 0 1200 300" fill="none" preserveAspectRatio="none" style={{ height: '250px' }}>
+        {/* Main flowing vine from left */}
+        <path ref={el => { pathsRef.current[0] = el }} d="M -20 150 C 100 120 150 180 250 140 S 400 100 500 130 S 650 180 750 140 S 900 90 1000 120 S 1100 160 1220 130" stroke={color} strokeWidth="2.5" strokeLinecap="round" />
+        {/* Secondary tendril branching up */}
+        <path ref={el => { pathsRef.current[1] = el }} d="M 250 140 C 280 100 310 70 350 50" stroke={lighterColor} strokeWidth="1.5" strokeLinecap="round" />
+        {/* Secondary tendril branching down */}
+        <path ref={el => { pathsRef.current[2] = el }} d="M 500 130 C 520 170 550 200 600 220" stroke={lighterColor} strokeWidth="1.5" strokeLinecap="round" />
+        {/* Third tendril */}
+        <path ref={el => { pathsRef.current[3] = el }} d="M 750 140 C 770 100 800 80 840 60" stroke={lighterColor} strokeWidth="1.5" strokeLinecap="round" />
+        {/* Another tendril */}
+        <path ref={el => { pathsRef.current[4] = el }} d="M 1000 120 C 1020 160 1040 200 1070 230" stroke={lighterColor} strokeWidth="1.5" strokeLinecap="round" />
 
-  // Leaf positions along the vine
-  const leaves = isCenter
-    ? [{ cx: 185, cy: 50 }, { cx: 215, cy: 110 }, { cx: 180, cy: 170 }]
-    : isRight
-    ? [{ cx: 60, cy: 50 }, { cx: 120, cy: 130 }, { cx: 220, cy: 180 }, { cx: 340, cy: 205 }]
-    : [{ cx: 340, cy: 50 }, { cx: 280, cy: 130 }, { cx: 180, cy: 180 }, { cx: 60, cy: 205 }]
+        {/* Leaf buds — small teardrop/circle clusters */}
+        <circle ref={el => { leavesRef.current[0] = el }} cx="350" cy="48" r="6" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[1] = el }} cx="340" cy="55" r="4" fill={lighterColor} />
+        <circle ref={el => { leavesRef.current[2] = el }} cx="600" cy="222" r="6" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[3] = el }} cx="610" cy="215" r="4" fill={lighterColor} />
+        <circle ref={el => { leavesRef.current[4] = el }} cx="840" cy="58" r="6" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[5] = el }} cx="830" cy="65" r="4" fill={lighterColor} />
+        <circle ref={el => { leavesRef.current[6] = el }} cx="1070" cy="232" r="6" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[7] = el }} cx="1060" cy="225" r="4" fill={lighterColor} />
+        {/* Mid-vine buds */}
+        <circle ref={el => { leavesRef.current[8] = el }} cx="150" cy="168" r="5" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[9] = el }} cx="400" cy="108" r="5" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[10] = el }} cx="650" cy="172" r="5" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[11] = el }} cx="900" cy="98" r="5" fill={darkerColor} />
+      </svg>
+    )
+  }
 
+  if (variant === 'sprawl') {
+    return (
+      <svg ref={svgRef} className={`w-full pointer-events-none ${className}`} viewBox="0 0 1200 200" fill="none" preserveAspectRatio="none" style={{ height: '160px' }}>
+        {/* Two intertwining vines */}
+        <path ref={el => { pathsRef.current[0] = el }} d="M -20 100 C 80 60 160 140 300 80 S 500 40 650 100 S 850 160 1000 80 S 1150 40 1220 100" stroke={color} strokeWidth="2" strokeLinecap="round" />
+        <path ref={el => { pathsRef.current[1] = el }} d="M -20 120 C 100 160 200 60 350 120 S 550 180 700 100 S 880 40 1050 120 S 1180 160 1220 110" stroke={lighterColor} strokeWidth="1.5" strokeLinecap="round" />
+        {/* Buds at intersections */}
+        <circle ref={el => { leavesRef.current[0] = el }} cx="180" cy="100" r="5" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[1] = el }} cx="420" cy="70" r="6" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[2] = el }} cx="580" cy="90" r="4" fill={lighterColor} />
+        <circle ref={el => { leavesRef.current[3] = el }} cx="760" cy="130" r="6" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[4] = el }} cx="940" cy="80" r="5" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[5] = el }} cx="1100" cy="115" r="4" fill={lighterColor} />
+        {/* Tiny flower-like clusters */}
+        <circle ref={el => { leavesRef.current[6] = el }} cx="300" cy="78" r="3" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[7] = el }} cx="305" cy="85" r="2.5" fill={lighterColor} />
+        <circle ref={el => { leavesRef.current[8] = el }} cx="295" cy="83" r="2" fill={color} />
+        <circle ref={el => { leavesRef.current[9] = el }} cx="700" cy="98" r="3" fill={darkerColor} />
+        <circle ref={el => { leavesRef.current[10] = el }} cx="705" cy="105" r="2.5" fill={lighterColor} />
+        <circle ref={el => { leavesRef.current[11] = el }} cx="695" cy="103" r="2" fill={color} />
+      </svg>
+    )
+  }
+
+  // Default 'wide' variant
   return (
-    <svg
-      ref={svgRef}
-      className={`w-full pointer-events-none ${className}`}
-      viewBox={isCenter ? '0 0 400 200' : '0 0 400 220'}
-      fill="none"
-      preserveAspectRatio="none"
-      style={{ height: isCenter ? '120px' : '80px' }}
-    >
-      <path
-        ref={pathRef}
-        d={vinePath}
-        stroke={color}
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        fill="none"
-      />
-      {leaves.map((leaf, i) => (
-        <circle
-          key={i}
-          ref={(el) => { leafRefs.current[i] = el }}
-          cx={leaf.cx}
-          cy={leaf.cy}
-          r="4"
-          fill={color.replace(/[\d.]+\)$/, '0.3)')}
-        />
-      ))}
+    <svg ref={svgRef} className={`w-full pointer-events-none ${className}`} viewBox="0 0 1200 180" fill="none" preserveAspectRatio="none" style={{ height: '140px' }}>
+      <path ref={el => { pathsRef.current[0] = el }} d="M -20 90 C 150 40 250 140 450 80 S 700 30 900 100 S 1100 50 1220 90" stroke={color} strokeWidth="2.5" strokeLinecap="round" />
+      <path ref={el => { pathsRef.current[1] = el }} d="M 450 80 C 470 40 500 20 540 15" stroke={lighterColor} strokeWidth="1.5" strokeLinecap="round" />
+      <path ref={el => { pathsRef.current[2] = el }} d="M 900 100 C 920 140 950 160 990 170" stroke={lighterColor} strokeWidth="1.5" strokeLinecap="round" />
+      <circle ref={el => { leavesRef.current[0] = el }} cx="540" cy="13" r="5" fill={darkerColor} />
+      <circle ref={el => { leavesRef.current[1] = el }} cx="530" cy="20" r="3.5" fill={lighterColor} />
+      <circle ref={el => { leavesRef.current[2] = el }} cx="990" cy="172" r="5" fill={darkerColor} />
+      <circle ref={el => { leavesRef.current[3] = el }} cx="980" cy="165" r="3.5" fill={lighterColor} />
+      <circle ref={el => { leavesRef.current[4] = el }} cx="200" cy="68" r="4" fill={darkerColor} />
+      <circle ref={el => { leavesRef.current[5] = el }} cx="680" cy="50" r="4" fill={darkerColor} />
+      <circle ref={el => { leavesRef.current[6] = el }} cx="1050" cy="72" r="4" fill={darkerColor} />
     </svg>
   )
 }

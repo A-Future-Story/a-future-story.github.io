@@ -17,14 +17,16 @@ export default function Home() {
       <TheDeepening />
       <DracArrives />
       <MarkitectReveal />
+      <VineDecoration variant="wide" color="rgba(201, 150, 58, 0.2)" className="bg-cream" />
       <MarkitectFlow />
       <MarkitectImpact />
-      <VineDecoration direction="right" color="rgba(139, 157, 119, 0.15)" className="bg-cream" />
+      <VineDecoration variant="tall" color="rgba(139, 157, 119, 0.25)" className="bg-cream" />
       <SuperBotScene />
-      <VineDecoration direction="left" color="rgba(196, 112, 110, 0.15)" className="bg-ivory" />
+      <VineDecoration variant="sprawl" color="rgba(196, 112, 110, 0.2)" className="bg-ivory" />
       <HelpexaPetal />
-      <VineDecoration direction="center" color="rgba(139, 157, 119, 0.12)" className="bg-ivory" />
+      <VineDecoration variant="tall" color="rgba(139, 157, 119, 0.2)" className="bg-ivory" />
       <GardenView />
+      <VineDecoration variant="sprawl" color="rgba(196, 112, 110, 0.15)" className="bg-ivory" />
       <TheInvitation />
     </main>
   )
