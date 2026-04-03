@@ -26,10 +26,15 @@ export default function TheDeepening() {
       },
     })
 
+    // Two-step bg: ivory → warm purple → deep fig (avoids grey midpoint)
     tl.fromTo(
       section,
       { backgroundColor: '#FAF7F2' },
-      { backgroundColor: '#2D1B3D', duration: 1, ease: 'none' },
+      { backgroundColor: '#5E3A5E', duration: 0.5, ease: 'none' },
+    )
+    tl.to(
+      section,
+      { backgroundColor: '#2D1B3D', duration: 0.5, ease: 'none' },
     )
 
     tl.fromTo(

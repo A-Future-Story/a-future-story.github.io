@@ -93,28 +93,41 @@ export default function DracArrives() {
         AI-powered business intelligence
       </p>
 
-      <svg
-        className="absolute bottom-[10%] w-[60vw] h-[20vh]"
-        viewBox="0 0 600 200"
-        fill="none"
-      >
-        <path
-          ref={(el) => { pathsRef.current[0] = el }}
-          d="M 300 0 Q 300 80 200 150"
-          stroke="rgba(201, 150, 58, 0.3)"
-          strokeWidth="1.5"
+      {/* Branch split — SuperBot (left) vs Markitect (right, larger) */}
+      <div className="mt-12 w-full max-w-3xl px-8">
+        <svg
+          className="w-full"
+          viewBox="0 0 600 280"
           fill="none"
-        />
-        <path
-          ref={(el) => { pathsRef.current[1] = el }}
-          d="M 300 0 Q 300 60 420 120 Q 480 150 500 190"
-          stroke="rgba(201, 150, 58, 0.6)"
-          strokeWidth="2"
-          fill="none"
-        />
-        <text x="160" y="170" fill="rgba(240, 232, 216, 0.4)" fontSize="12" fontFamily="DM Sans, sans-serif">SuperBot</text>
-        <text x="470" y="195" fill="rgba(212, 168, 67, 0.7)" fontSize="14" fontFamily="DM Sans, sans-serif" fontWeight="600">Markitect</text>
-      </svg>
+          style={{ height: 'auto', minHeight: '180px' }}
+        >
+          {/* Main stem from center top */}
+          <path
+            ref={(el) => { pathsRef.current[0] = el }}
+            d="M 300 0 C 300 40 280 70 240 110 C 200 150 160 180 130 220"
+            stroke="rgba(201, 150, 58, 0.35)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            fill="none"
+          />
+          {/* Markitect branch — longer, bolder */}
+          <path
+            ref={(el) => { pathsRef.current[1] = el }}
+            d="M 300 0 C 300 50 330 80 380 110 C 430 140 460 170 480 220"
+            stroke="rgba(201, 150, 58, 0.7)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            fill="none"
+          />
+          {/* SuperBot label */}
+          <text x="90" y="250" fill="rgba(240, 232, 216, 0.5)" fontSize="18" fontFamily="'DM Sans', sans-serif">SuperBot</text>
+          {/* Markitect label — larger, bolder */}
+          <text x="430" y="255" fill="rgba(212, 168, 67, 0.85)" fontSize="22" fontFamily="'DM Sans', sans-serif" fontWeight="700">Markitect</text>
+          {/* Small dots at branch ends */}
+          <circle cx="130" cy="220" r="4" fill="rgba(240, 232, 216, 0.3)" />
+          <circle cx="480" cy="220" r="5" fill="rgba(212, 168, 67, 0.6)" />
+        </svg>
+      </div>
     </section>
   )
 }
