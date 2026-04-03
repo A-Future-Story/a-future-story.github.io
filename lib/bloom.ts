@@ -50,6 +50,18 @@ export function drawBloom(
   ctx.fillStyle = '#FAF7F2'
   ctx.fillRect(0, 0, width, height)
 
+  // Draw initial seed shape at center (visible even at progress 0)
+  const seedSize = 24 + progress * 40
+  const seedAlpha = 0.5 + progress * 0.2
+  const seedGradient = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, seedSize)
+  seedGradient.addColorStop(0, `rgba(196, 112, 110, ${seedAlpha})`)
+  seedGradient.addColorStop(0.5, `rgba(139, 157, 119, ${seedAlpha * 0.6})`)
+  seedGradient.addColorStop(1, 'rgba(250, 247, 242, 0)')
+  ctx.fillStyle = seedGradient
+  ctx.beginPath()
+  ctx.arc(width / 2, height / 2, seedSize, 0, Math.PI * 2)
+  ctx.fill()
+
   ctx.save()
   ctx.globalCompositeOperation = 'multiply'
 

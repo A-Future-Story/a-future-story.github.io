@@ -106,6 +106,16 @@ export default function TheSeed() {
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
       />
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-pulse z-10">
+        <span className="font-sans text-xs tracking-widest uppercase text-walnut/30">Scroll</span>
+        <svg width="20" height="28" viewBox="0 0 20 28" fill="none" className="text-walnut/20">
+          <rect x="1" y="1" width="18" height="26" rx="9" stroke="currentColor" strokeWidth="1.5"/>
+          <circle cx="10" cy="8" r="2" fill="currentColor">
+            <animate attributeName="cy" values="8;18;8" dur="2s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+      </div>
     </section>
   )
 }
