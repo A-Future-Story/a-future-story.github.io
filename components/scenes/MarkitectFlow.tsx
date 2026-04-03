@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import FlowPanel from '@/components/FlowPanel'
@@ -21,8 +21,18 @@ const STEPS = [
 export default function MarkitectFlow() {
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  useEffect(() => {
+    if (isMobile) return
+
     const container = containerRef.current
     const track = trackRef.current
     if (!container || !track) return
@@ -47,11 +57,14 @@ export default function MarkitectFlow() {
       tween.scrollTrigger?.kill()
       tween.kill()
     }
-  }, [])
+  }, [isMobile])
 
   return (
     <section ref={containerRef} className="relative overflow-hidden bg-cream">
-      <div ref={trackRef} className="flex w-fit">
+      <div
+        ref={trackRef}
+        className={isMobile ? 'flex flex-col gap-6 px-6 py-12' : 'flex w-fit'}
+      >
         {STEPS.map((step, i) => (
           <FlowPanel key={i} step={i + 1} title={step.title} description={step.description} />
         ))}

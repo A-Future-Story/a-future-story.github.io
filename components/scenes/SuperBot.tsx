@@ -49,15 +49,15 @@ export default function SuperBotScene() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative h-screen w-full bg-cream flex">
-      <div className="w-1/2 flex items-center justify-center px-12">
-        <h2 className="font-serif text-[clamp(2rem,4vw,4rem)] text-fig leading-tight">
+    <section ref={sectionRef} className="relative h-screen w-full bg-cream flex flex-col md:flex-row">
+      <div className="w-full md:w-1/2 flex items-center justify-center px-6 md:px-12 pt-16 md:pt-0">
+        <h2 className="font-serif text-[clamp(2rem,4vw,4rem)] text-fig leading-tight text-center md:text-left">
           Your AI that actually<br />
           <span className="text-drac-gold">knows your business</span>
         </h2>
       </div>
 
-      <div className="w-1/2 flex items-center justify-center px-8">
+      <div className="w-full md:w-1/2 flex items-center justify-center px-6 md:px-8">
         <div className="w-full max-w-md space-y-4">
           {MESSAGES.map((msg, i) => (
             <div

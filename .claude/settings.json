@@ -1,0 +1,62 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_fill_form",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_console_message",
+      "mcp__playwright__browser_tabs",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_install",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_run_code",
+      "mcp__playwright__browser_press_key",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_network_requests",
+      "mcp__playwright__browser_handle_dialog",
+      "mcp_shopify*",
+      "npx*",
+      "cd*",
+      "ls*",
+      "mcp__n8n__*",
+      "Bash(python -m pytest*)",
+      "Bash(cd*)",
+      "Bash(poetry run pytest*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git pull*)",
+      "Bash(git checkout*)",
+      "Bash(find *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file=$(echo \"$CLAUDE_TOOL_INPUT\" | python3 -c \"import json,sys; print(json.load(sys.stdin).get('file_path',''))\" 2>/dev/null); [[ \"$file\" == *.py ]] && ruff check --fix \"$file\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file=$(echo \"$CLAUDE_TOOL_INPUT\" | python3 -c \"import json,sys; print(json.load(sys.stdin).get('file_path',''))\" 2>/dev/null); if echo \"$file\" | grep -qE '\\.env'; then echo 'Blocked: .env files are protected. Edit manually.' >&2; exit 2; fi"
+          }
+        ]
+      }
+    ]
+  }
+}

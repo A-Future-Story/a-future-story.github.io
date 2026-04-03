@@ -63,7 +63,7 @@ export default function GardenView() {
 
       <div className="w-px h-24 bg-gradient-to-b from-walnut/10 to-walnut/3 mx-auto mb-24" />
 
-      <div className="max-w-2xl mx-auto grid grid-cols-2 gap-8 px-8">
+      <div className="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-8 px-8">
         {TRUST.map((signal, i) => (
           <div
             key={signal}

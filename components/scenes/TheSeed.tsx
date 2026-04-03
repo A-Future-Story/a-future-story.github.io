@@ -49,32 +49,43 @@ export default function TheSeed() {
       },
     })
 
+    // Visibility check – only render when near the viewport
+    let isVisible = true
+
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisible = entry.isIntersecting },
+      { rootMargin: '100% 0px' } // start rendering 1 viewport before visible
+    )
+    observer.observe(container)
+
     // Render loop
     let rafId: number
     function render() {
-      const w = canvas!.width / dpr
-      const h = canvas!.height / dpr
-      drawBloom(ctx!, petalsRef.current, progressRef.current, w, h)
+      if (isVisible) {
+        const w = canvas!.width / dpr
+        const h = canvas!.height / dpr
+        drawBloom(ctx!, petalsRef.current, progressRef.current, w, h)
 
-      // Text reveal after 60% progress
-      const textProgress = Math.max(0, (progressRef.current - 0.6) / 0.4)
-      if (textProgress > 0) {
-        ctx!.save()
-        ctx!.globalAlpha = textProgress
-        ctx!.textAlign = 'center'
-        ctx!.textBaseline = 'middle'
+        // Text reveal after 60% progress
+        const textProgress = Math.max(0, (progressRef.current - 0.6) / 0.4)
+        if (textProgress > 0) {
+          ctx!.save()
+          ctx!.globalAlpha = textProgress
+          ctx!.textAlign = 'center'
+          ctx!.textBaseline = 'middle'
 
-        // Main title
-        ctx!.font = `600 ${Math.min(w * 0.08, 80)}px "Cormorant Garamond", Georgia, serif`
-        ctx!.fillStyle = '#2C1810'
-        ctx!.fillText('Skynift', w / 2, h / 2 - 20)
+          // Main title
+          ctx!.font = `600 ${Math.min(w * 0.08, 80)}px "Cormorant Garamond", Georgia, serif`
+          ctx!.fillStyle = '#2C1810'
+          ctx!.fillText('Skynift', w / 2, h / 2 - 20)
 
-        // Tagline
-        ctx!.font = `400 ${Math.min(w * 0.02, 18)}px "DM Sans", system-ui, sans-serif`
-        ctx!.fillStyle = 'rgba(44, 24, 16, 0.7)'
-        ctx!.fillText('Intelligence that grows with you', w / 2, h / 2 + 30)
+          // Tagline
+          ctx!.font = `400 ${Math.min(w * 0.02, 18)}px "DM Sans", system-ui, sans-serif`
+          ctx!.fillStyle = 'rgba(44, 24, 16, 0.7)'
+          ctx!.fillText('Intelligence that grows with you', w / 2, h / 2 + 30)
 
-        ctx!.restore()
+          ctx!.restore()
+        }
       }
 
       rafId = requestAnimationFrame(render)
@@ -83,6 +94,7 @@ export default function TheSeed() {
 
     return () => {
       cancelAnimationFrame(rafId)
+      observer.disconnect()
       trigger.kill()
       window.removeEventListener('resize', resize)
     }

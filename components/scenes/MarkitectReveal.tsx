@@ -47,17 +47,29 @@ export default function MarkitectReveal() {
       },
     })
 
+    // Visibility check – only render when near the viewport
+    let isVisible = true
+
+    const observer = new IntersectionObserver(
+      ([entry]) => { isVisible = entry.isIntersecting },
+      { rootMargin: '100% 0px' } // start rendering 1 viewport before visible
+    )
+    observer.observe(container)
+
     let rafId: number
     function render() {
-      const w = canvas!.width / dpr
-      const h = canvas!.height / dpr
-      drawMarkitectBloom(ctx!, petalsRef.current, progressRef.current, w, h)
+      if (isVisible) {
+        const w = canvas!.width / dpr
+        const h = canvas!.height / dpr
+        drawMarkitectBloom(ctx!, petalsRef.current, progressRef.current, w, h)
+      }
       rafId = requestAnimationFrame(render)
     }
     render()
 
     return () => {
       cancelAnimationFrame(rafId)
+      observer.disconnect()
       trigger.kill()
       window.removeEventListener('resize', resize)
     }
