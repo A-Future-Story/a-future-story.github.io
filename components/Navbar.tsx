@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import DarkModeToggle from '@/components/DarkModeToggle'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -17,9 +18,10 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-ivory/80 backdrop-blur-md border-b border-walnut/5 py-3'
+          ? 'bg-ivory/60 backdrop-blur-lg border-b border-walnut/5 py-3'
           : 'bg-transparent py-5'
       }`}
+      style={{ textShadow: '0 0 10px rgba(250,247,242,0.5)' }}
     >
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
         <a href="#" className="font-serif text-lg text-walnut/70 hover:text-walnut transition-colors">
@@ -44,6 +46,7 @@ export default function Navbar() {
           >
             Get Started
           </a>
+          <DarkModeToggle />
         </div>
       </div>
     </nav>

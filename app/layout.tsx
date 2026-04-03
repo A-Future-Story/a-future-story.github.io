@@ -3,6 +3,7 @@ import { serif, sans } from '@/lib/fonts'
 import SmoothScroll from '@/components/SmoothScroll'
 import Navbar from '@/components/Navbar'
 import SideVines from '@/components/SideVines'
+import FloatingCreatures from '@/components/FloatingCreatures'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SmoothScroll>
           <Navbar />
           <SideVines />
+          <FloatingCreatures />
           {children}
         </SmoothScroll>
       </body>

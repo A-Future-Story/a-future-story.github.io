@@ -15,6 +15,20 @@ export default function Home() {
   return (
     <main>
       <TheSeed />
+      {/* Company intro — bridges hero to the deepening */}
+      <section className="bg-ivory py-16 px-6 text-center">
+        <p className="font-sans text-sm tracking-widest uppercase text-walnut/30 mb-6">Skynift Private Limited</p>
+        <h2 className="font-serif text-[clamp(1.5rem,3.5vw,3rem)] text-walnut/70 max-w-3xl mx-auto leading-relaxed mb-6">
+          We build AI products that transform how businesses serve customers and reach audiences.
+        </h2>
+        <div className="flex flex-wrap justify-center gap-8 text-walnut/30 font-sans text-sm">
+          <span>Customer Service AI</span>
+          <span className="text-walnut/10">|</span>
+          <span>Ad Campaign Automation</span>
+          <span className="text-walnut/10">|</span>
+          <span>Business Intelligence</span>
+        </div>
+      </section>
       <TheDeepening />
       <DracArrives />
       <MarkitectReveal />
