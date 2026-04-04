@@ -44,15 +44,20 @@ export default function MarkitectReveal() {
     resize()
     window.addEventListener('resize', resize)
 
-    const trigger = ScrollTrigger.create({
-      trigger: container,
-      start: 'top top',
-      end: '+=300%',
-      pin: true,
-      scrub: 2.5,
-      anticipatePin: 1,
-      onUpdate: (self) => {
-        progressRef.current = self.progress
+    const proxy = { progress: 0 }
+    const tween = gsap.to(proxy, {
+      progress: 1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: container,
+        start: 'top top',
+        end: '+=2500%',
+        pin: true,
+        scrub: 2.5,
+        anticipatePin: 1,
+        onUpdate: (self) => {
+          progressRef.current = self.progress
+        },
       },
     })
 
@@ -79,7 +84,8 @@ export default function MarkitectReveal() {
     return () => {
       cancelAnimationFrame(rafId)
       observer.disconnect()
-      trigger.kill()
+      tween.scrollTrigger?.kill()
+      tween.kill()
       window.removeEventListener('resize', resize)
     }
   }, [])
