@@ -4,21 +4,21 @@ import CopyEmail from '@/components/CopyEmail'
 
 export default function TheInvitation() {
   return (
-    <section className="relative min-h-screen w-full bg-ivory flex flex-col items-center justify-center px-8">
-      <h2 className="font-serif text-[clamp(2.5rem,6vw,5rem)] text-walnut text-center leading-tight mb-12">
+    <section id="contact" className="relative min-h-screen w-full bg-ivory flex flex-col items-center justify-center px-6 sm:px-8">
+      <h2 className="font-serif text-[clamp(2rem,6vw,5rem)] text-walnut text-center leading-tight mb-8 sm:mb-12">
         Let&apos;s grow something together.
       </h2>
 
-      <div className="flex flex-col sm:flex-row gap-4 items-center mb-16">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center mb-10 sm:mb-16">
         <a
           href="https://drac.ai"
-          className="px-8 py-4 bg-drac-gold text-white font-sans font-semibold text-lg rounded-full hover:bg-drac-amber transition-colors duration-300"
+          className="px-6 sm:px-8 py-3 sm:py-4 bg-drac-gold text-white font-sans font-semibold text-base sm:text-lg rounded-full hover:bg-drac-amber transition-colors duration-300"
         >
           Try Markitect
         </a>
         <a
           href="https://helpexa.com"
-          className="px-8 py-4 border-2 border-walnut/15 text-walnut font-sans font-semibold text-lg rounded-full hover:border-walnut/30 transition-colors duration-300"
+          className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-walnut/15 text-walnut font-sans font-semibold text-base sm:text-lg rounded-full hover:border-walnut/30 transition-colors duration-300"
         >
           Explore Helpexa
         </a>
@@ -41,16 +41,16 @@ export default function TheInvitation() {
             <span className="font-sans text-xs text-walnut/20 block mt-1">Skynift Private Limited</span>
           </div>
 
-          {/* Trust badges */}
+          {/* Products */}
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <span className="font-sans text-xs text-walnut/25 flex items-center gap-1.5">
-              <span className="text-sage">●</span> SOC 2 Infrastructure
+              <span className="text-drac-gold">●</span> Markitect
             </span>
             <span className="font-sans text-xs text-walnut/25 flex items-center gap-1.5">
-              <span className="text-sage">●</span> AES-256 Encryption
+              <span className="text-sage">●</span> SuperBot
             </span>
             <span className="font-sans text-xs text-walnut/25 flex items-center gap-1.5">
-              <span className="text-sage">●</span> 99.9% Uptime
+              <span className="text-rose">●</span> Helpexa
             </span>
           </div>
 

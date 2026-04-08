@@ -27,13 +27,14 @@ export default function TheDeepening() {
     const midBg = isDarkRef.current ? '#1A1816' : '#3A3530'
     const endBg = '#1C1915'
 
+    const mobile = window.innerWidth < 768
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: '+=100%',
+        end: mobile ? '+=120%' : '+=200%',
         pin: true,
-        scrub: 1,
+        scrub: mobile ? 0.5 : 1,
         anticipatePin: 1,
       },
     })
@@ -52,9 +53,12 @@ export default function TheDeepening() {
     tl.fromTo(
       text,
       { opacity: 0, y: 30, color: '#2C1810' },
-      { opacity: 1, y: 0, color: '#D4A843', duration: 0.5 },
-      0.3,
+      { opacity: 1, y: 0, color: '#D4A843', duration: 0.3 },
+      0.2,
     )
+
+    // Hold text visible so user can read it
+    tl.to({}, { duration: 0.4 })
 
     return () => {
       observer.disconnect()
@@ -65,6 +69,7 @@ export default function TheDeepening() {
 
   return (
     <section
+      id="engine"
       ref={sectionRef}
       className="relative h-screen w-full flex items-center justify-center"
     >

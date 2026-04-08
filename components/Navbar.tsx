@@ -45,7 +45,7 @@ export default function Navbar() {
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'py-2' : 'py-4'}`}>
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
         <a
-          href="#"
+          href="#home"
           className="font-serif text-lg px-4 py-1.5 rounded-full font-medium"
           style={{ background: pillBg, color: isDark ? '#E8E0D4' : '#2C1810', border: pillBorder, transition: 'all 0.3s ease' }}
         >

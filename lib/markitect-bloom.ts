@@ -8,7 +8,7 @@ export interface GeoPetal {
   maxScale: number
 }
 
-const COLORS = [
+const COLORS_LIGHT = [
   'rgba(201, 150, 58, 0.5)',   // drac gold
   'rgba(196, 112, 110, 0.4)',  // coral
   'rgba(184, 118, 45, 0.35)',  // amber
@@ -16,7 +16,16 @@ const COLORS = [
   'rgba(201, 150, 58, 0.25)',  // gold light
 ]
 
-export function createGeoPetals(cx: number, cy: number): GeoPetal[] {
+const COLORS_DARK = [
+  'rgba(201, 150, 58, 0.6)',   // drac gold brighter
+  'rgba(196, 112, 110, 0.5)',  // coral brighter
+  'rgba(184, 118, 45, 0.45)',  // amber brighter
+  'rgba(212, 168, 67, 0.4)',   // gold brighter
+  'rgba(201, 150, 58, 0.35)',  // gold light brighter
+]
+
+export function createGeoPetals(cx: number, cy: number, isDark: boolean = false): GeoPetal[] {
+  const colors = isDark ? COLORS_DARK : COLORS_LIGHT
   const petals: GeoPetal[] = []
   for (let i = 0; i < 8; i++) {
     const angle = (i / 8) * Math.PI * 2
@@ -27,7 +36,7 @@ export function createGeoPetals(cx: number, cy: number): GeoPetal[] {
       size: 60 + Math.random() * 100,
       sides: [5, 6, 7, 8][Math.floor(Math.random() * 4)],
       rotation: angle,
-      color: COLORS[i % COLORS.length],
+      color: colors[i % colors.length],
       maxScale: 0.8 + Math.random() * 0.4,
     })
   }
@@ -57,7 +66,7 @@ export function drawMarkitectBloom(
   ctx.clearRect(0, 0, width, height)
 
   const bgProgress = Math.max(0, (progress - 0.7) / 0.3)
-  const startR = isDark ? 28 : 28, startG = isDark ? 25 : 25, startB = isDark ? 21 : 21
+  const startR = isDark ? 20 : 28, startG = isDark ? 18 : 25, startB = isDark ? 24 : 21
   const endR = isDark ? 15 : 240, endG = isDark ? 13 : 232, endB = isDark ? 19 : 216
   const r = Math.round(startR + bgProgress * (endR - startR))
   const g = Math.round(startG + bgProgress * (endG - startG))
@@ -79,7 +88,7 @@ export function drawMarkitectBloom(
 
     const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, petal.size)
     gradient.addColorStop(0, petal.color)
-    gradient.addColorStop(1, 'rgba(28, 25, 21, 0)')
+    gradient.addColorStop(1, isDark ? 'rgba(15, 13, 19, 0)' : 'rgba(28, 25, 21, 0)')
 
     ctx.fillStyle = gradient
     drawPolygon(ctx, petal.sides, petal.size)
@@ -93,7 +102,9 @@ export function drawMarkitectBloom(
     ctx.save()
     ctx.globalAlpha = textProgress
 
-    const textColor = bgProgress > 0.5 ? '#2C1810' : '#D4A843'
+    const textColor = isDark
+      ? '#D4A843'
+      : bgProgress > 0.5 ? '#2C1810' : '#D4A843'
 
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
@@ -102,7 +113,9 @@ export function drawMarkitectBloom(
     ctx.fillText('Markitect', width / 2, height / 2 - 20)
 
     ctx.font = `400 ${Math.min(width * 0.022, 20)}px "DM Sans", system-ui, sans-serif`
-    ctx.fillStyle = bgProgress > 0.5 ? 'rgba(44, 24, 16, 0.7)' : 'rgba(240, 232, 216, 0.7)'
+    ctx.fillStyle = isDark
+      ? 'rgba(232, 224, 212, 0.7)'
+      : bgProgress > 0.5 ? 'rgba(44, 24, 16, 0.7)' : 'rgba(240, 232, 216, 0.7)'
     ctx.fillText('Describe your product. Launch your campaign. AI handles the rest.', width / 2, height / 2 + 30)
 
     ctx.restore()

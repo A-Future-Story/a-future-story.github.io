@@ -17,6 +17,7 @@ const STEPS = [
 export default function MarkitectFlow() {
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
+  const panelsRef = useRef<(HTMLDivElement | null)[]>([])
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -27,42 +28,72 @@ export default function MarkitectFlow() {
   }, [])
 
   useEffect(() => {
-    if (isMobile) return
-
     const container = containerRef.current
     const track = trackRef.current
     if (!container || !track) return
 
-    const totalScrollWidth = track.scrollWidth - window.innerWidth
+    const triggers: ScrollTrigger[] = []
 
-    const tween = gsap.to(track, {
-      x: -totalScrollWidth,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: container,
-        start: 'top top',
-        end: () => `+=${totalScrollWidth}`,
-        pin: true,
-        scrub: 1,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
-    })
+    if (isMobile) {
+      // MOBILE: each panel animates in as it enters viewport
+      panelsRef.current.forEach((panel) => {
+        if (!panel) return
+        const tween = gsap.fromTo(panel,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
+            scrollTrigger: {
+              trigger: panel,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+            },
+          },
+        )
+        if (tween.scrollTrigger) triggers.push(tween.scrollTrigger)
+      })
+    } else {
+      // DESKTOP: horizontal scroll with pin
+      const totalScrollWidth = track.scrollWidth - window.innerWidth
+      const breathingRoom = window.innerHeight * 0.6
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: 'top top',
+          end: () => `+=${totalScrollWidth + breathingRoom}`,
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      })
+
+      tl.to(track, {
+        x: -totalScrollWidth,
+        ease: 'none',
+        duration: 1,
+      })
+
+      tl.to({}, { duration: 0.3 })
+
+      if (tl.scrollTrigger) triggers.push(tl.scrollTrigger)
+    }
 
     return () => {
-      tween.scrollTrigger?.kill()
-      tween.kill()
+      triggers.forEach(t => t.kill())
     }
   }, [isMobile])
 
   return (
-    <section ref={containerRef} className="relative overflow-hidden bg-cream">
+    <section id="how-it-works" ref={containerRef} className="relative overflow-hidden bg-cream min-h-screen">
       <div
         ref={trackRef}
-        className={isMobile ? 'flex flex-col gap-6 px-6 py-12' : 'flex w-fit'}
+        className={isMobile ? 'flex flex-col px-0 py-8' : 'flex w-fit'}
       >
         {STEPS.map((step, i) => (
-          <FlowPanel key={i} step={i + 1} title={step.title} description={step.description} />
+          <div key={i} ref={(el) => { panelsRef.current[i] = el }} className={isMobile ? 'opacity-0' : ''}>
+            <FlowPanel step={i + 1} title={step.title} description={step.description} compact={isMobile} />
+          </div>
         ))}
       </div>
     </section>

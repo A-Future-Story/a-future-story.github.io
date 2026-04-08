@@ -16,13 +16,14 @@ export default function DracArrives() {
     const section = sectionRef.current
     if (!section) return
 
+    const mobile = window.innerWidth < 768
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: '+=340%',
+        end: mobile ? '+=200%' : '+=420%',
         pin: true,
-        scrub: 1,
+        scrub: mobile ? 0.5 : 1,
         anticipatePin: 1,
       },
     })
@@ -61,6 +62,9 @@ export default function DracArrives() {
       )
     })
 
+    // Hold at end so user absorbs the branch split and labels
+    tl.to({}, { duration: 0.3 })
+
     return () => {
       tl.scrollTrigger?.kill()
       tl.kill()
@@ -71,6 +75,7 @@ export default function DracArrives() {
 
   return (
     <section
+      id="drac"
       ref={sectionRef}
       className="relative h-screen w-full flex flex-col items-center justify-center bg-[#1C1915] overflow-hidden"
     >
@@ -93,15 +98,15 @@ export default function DracArrives() {
         AI-powered business intelligence
       </p>
 
-      <div className="max-w-xl text-center mt-6 px-6">
-        <p className="font-sans text-sm text-cream/40 leading-relaxed">
+      <div className="max-w-xl text-center mt-4 sm:mt-6 px-6">
+        <p className="font-sans text-xs sm:text-sm text-cream/40 leading-relaxed">
           Two products. One mission. Automate customer support with SuperBot.
           Launch ad campaigns with Markitect. All powered by AI that learns your business.
         </p>
       </div>
 
       {/* Branch split — SuperBot (left) vs Markitect (right, larger) */}
-      <div className="mt-12 w-full max-w-3xl px-8">
+      <div className="mt-6 sm:mt-12 w-full max-w-3xl px-4 sm:px-8">
         <svg
           className="w-full"
           viewBox="0 0 600 280"

@@ -21,13 +21,14 @@ export default function SuperBotScene() {
     const section = sectionRef.current
     if (!section) return
 
+    const mobile = window.innerWidth < 768
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: '+=100%',
+        end: mobile ? '+=140%' : '+=220%',
         pin: true,
-        scrub: 1,
+        scrub: mobile ? 0.5 : 1,
         anticipatePin: 1,
       },
     })
@@ -37,10 +38,13 @@ export default function SuperBotScene() {
       tl.fromTo(
         msg,
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.2, ease: 'power2.out' },
-        i * 0.2,
+        { opacity: 1, y: 0, duration: 0.15, ease: 'power2.out' },
+        i * 0.15,
       )
     })
+
+    // Hold so user can read the full conversation
+    tl.to({}, { duration: 0.4 })
 
     return () => {
       tl.scrollTrigger?.kill()
@@ -49,27 +53,27 @@ export default function SuperBotScene() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative h-screen w-full bg-cream flex flex-col md:flex-row">
-      <div className="w-full md:w-1/2 flex items-center justify-center px-6 md:px-12 pt-16 md:pt-0">
-        <h2 className="font-serif text-[clamp(2rem,4vw,4rem)] text-walnut leading-tight text-center md:text-left">
+    <section id="superbot" ref={sectionRef} className="relative min-h-screen md:h-screen w-full bg-cream flex flex-col md:flex-row">
+      <div className="w-full md:w-1/2 flex flex-col items-center md:items-start justify-center px-6 md:px-12 pt-16 md:pt-0">
+        <h2 className="font-serif text-[clamp(1.75rem,4vw,4rem)] text-walnut leading-tight text-center md:text-left">
           Your AI that actually<br />
           <span className="text-drac-gold">knows your business</span>
         </h2>
-        <div className="mt-8 space-y-3">
-          <p className="font-sans text-sm text-walnut/40 flex items-center gap-2">
+        <div className="mt-6 md:mt-8 space-y-2 md:space-y-3">
+          <p className="font-sans text-xs md:text-sm text-walnut/40 flex items-center gap-2">
             <span className="text-drac-gold">✦</span> Trained on your own documents and data
           </p>
-          <p className="font-sans text-sm text-walnut/40 flex items-center gap-2">
-            <span className="text-drac-gold">✦</span> 50+ languages with auto-detection
+          <p className="font-sans text-xs md:text-sm text-walnut/40 flex items-center gap-2">
+            <span className="text-drac-gold">✦</span> Multilingual with auto-detection
           </p>
-          <p className="font-sans text-sm text-walnut/40 flex items-center gap-2">
+          <p className="font-sans text-xs md:text-sm text-walnut/40 flex items-center gap-2">
             <span className="text-drac-gold">✦</span> Live in 5 minutes with one line of code
           </p>
         </div>
       </div>
 
-      <div className="w-full md:w-1/2 flex items-center justify-center px-6 md:px-8">
-        <div className="w-full max-w-md space-y-4">
+      <div className="w-full md:w-1/2 flex items-center justify-center px-6 md:px-8 pb-12 md:pb-0">
+        <div className="w-full max-w-md space-y-3 md:space-y-4">
           {MESSAGES.map((msg, i) => (
             <div
               key={i}

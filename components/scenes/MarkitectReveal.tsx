@@ -44,6 +44,7 @@ export default function MarkitectReveal() {
     resize()
     window.addEventListener('resize', resize)
 
+    const mobile = window.innerWidth < 768
     const proxy = { progress: 0 }
     const tween = gsap.to(proxy, {
       progress: 1,
@@ -51,9 +52,9 @@ export default function MarkitectReveal() {
       scrollTrigger: {
         trigger: container,
         start: 'top top',
-        end: '+=2500%',
+        end: mobile ? '+=600%' : '+=1500%',
         pin: true,
-        scrub: 2.5,
+        scrub: mobile ? 1 : 2.5,
         anticipatePin: 1,
         onUpdate: (self) => {
           progressRef.current = self.progress
@@ -91,7 +92,7 @@ export default function MarkitectReveal() {
   }, [])
 
   return (
-    <section ref={containerRef} className="relative h-screen w-full overflow-hidden">
+    <section id="markitect" ref={containerRef} className="relative h-screen w-full overflow-hidden bg-cream">
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
     </section>
   )

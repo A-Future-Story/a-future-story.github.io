@@ -42,3 +42,7 @@ next-env.d.ts
 
 # nested repos
 /pretext
+
+
+# Playwright MCP screenshots and logs
+.playwright-mcp/

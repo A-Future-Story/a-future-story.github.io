@@ -14,6 +14,7 @@ export default function TheSeed() {
   const progressRef = useRef(0)
   const petalsRef = useRef<ReturnType<typeof createPetals>>([])
   const isDarkRef = useRef(false)
+  const isMobileRef = useRef(false)
 
   useEffect(() => {
     const check = () => { isDarkRef.current = document.documentElement.classList.contains('dark') }
@@ -31,6 +32,8 @@ export default function TheSeed() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    isMobileRef.current = window.innerWidth < 768
+
     // Size canvas
     const dpr = Math.min(2, window.devicePixelRatio || 1)
     function resize() {
@@ -47,12 +50,13 @@ export default function TheSeed() {
     window.addEventListener('resize', resize)
 
     // ScrollTrigger: pin and scrub
+    const mobile = isMobileRef.current
     const trigger = ScrollTrigger.create({
       trigger: container,
       start: 'top top',
-      end: '+=200%',
+      end: mobile ? '+=120%' : '+=200%',
       pin: true,
-      scrub: 1,
+      scrub: mobile ? 0.5 : 1,
       anticipatePin: 1,
       onUpdate: (self) => {
         progressRef.current = self.progress
@@ -68,7 +72,7 @@ export default function TheSeed() {
           scrollTrigger: {
             trigger: container,
             start: 'top top',
-            end: '+=60%',
+            end: mobile ? '+=40%' : '+=60%',
             scrub: true,
           },
         }
@@ -106,7 +110,7 @@ export default function TheSeed() {
   }, [])
 
   return (
-    <section ref={containerRef} className="relative h-screen w-full overflow-hidden">
+    <section id="home" ref={containerRef} className="relative h-screen w-full overflow-hidden">
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
