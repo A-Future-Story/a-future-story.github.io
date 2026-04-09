@@ -318,13 +318,24 @@ export default function HelpexaPetal() {
       }
     }
 
-    // Pricing
+    // CTA — pin briefly so it anchors on screen
     if (pricingRef.current) {
-      const tween = gsap.fromTo(pricingRef.current,
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: pricingRef.current,
+          start: 'top 40%',
+          end: '+=60%',
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+        },
+      })
+      tl.fromTo(pricingRef.current,
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', scrollTrigger: { trigger: pricingRef.current, start: 'top 80%', toggleActions: 'play none none none' } },
+        { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
       )
-      if (tween.scrollTrigger) triggers.push(tween.scrollTrigger)
+      tl.to({}, { duration: 0.6 }) // hold
+      if (tl.scrollTrigger) triggers.push(tl.scrollTrigger)
     }
 
     return () => { triggers.forEach(t => t.kill()) }
@@ -398,11 +409,11 @@ export default function HelpexaPetal() {
         <div className="w-full md:w-1/2 flex items-center justify-center px-6 md:px-8 pb-10 md:pb-0">
           <div className="w-full max-w-md">
             {/* Chat window frame */}
-            <div className="rounded-2xl border border-walnut/8 bg-[#FDFBF7] overflow-hidden shadow-[0_4px_40px_rgba(44,24,16,0.06)]">
+            <div className={`rounded-2xl border border-walnut/8 overflow-hidden shadow-[0_4px_40px_rgba(44,24,16,0.06)] ${isDark ? 'bg-[#1A1816]' : 'bg-[#FDFBF7]'}`}>
               {/* Chat header */}
               <div
                 ref={chatHeaderRef}
-                className="opacity-0 flex items-center gap-3 px-5 py-3 border-b border-walnut/5 bg-[#FAF7F2]"
+                className={`opacity-0 flex items-center gap-3 px-5 py-3 border-b border-walnut/5 ${isDark ? 'bg-[#1E1B18]' : 'bg-[#FAF7F2]'}`}
               >
                 <span className="w-8 h-8 rounded-full bg-rose/15 text-rose flex items-center justify-center font-serif text-xs font-bold">H</span>
                 <div>
@@ -430,7 +441,7 @@ export default function HelpexaPetal() {
 
               {/* Input bar */}
               <div className="px-4 pb-3">
-                <div className="flex items-center gap-2 rounded-full border border-walnut/8 bg-[#FAF7F2] px-4 py-2">
+                <div className={`flex items-center gap-2 rounded-full border border-walnut/8 px-4 py-2 ${isDark ? 'bg-[#1E1B18]' : 'bg-[#FAF7F2]'}`}>
                   <span className="font-sans text-xs text-walnut/25 flex-1">Type a message...</span>
                   <span className="text-rose/30 text-sm">↑</span>
                 </div>
