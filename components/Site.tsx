@@ -3,7 +3,7 @@
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScrollTrigger, Observer, ScrollToPlugin } from 'gsap/all'
 import { SPRIG_POSES, SPRIG_START, type SprigState } from '@/lib/sprig-poses'
 import Wordmark, { growWordmark } from '@/components/Wordmark'
 
@@ -30,7 +30,7 @@ export default function Site() {
   const rootRef = useRef<HTMLDivElement>(null)
   const filmRef = useRef<HTMLElement>(null)
   const stRef = useRef<ScrollTrigger | null>(null)
-  const navRef = useRef(0)
+  const travelRef = useRef<((k: number) => void) | null>(null)
   const logoRef = useRef<SVGSVGElement>(null)
   const reducedRef = useRef(false)
   const [noGL, setNoGL] = useState(false)
@@ -44,17 +44,13 @@ export default function Site() {
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'dark' ? '#141210' : '#faf7f2')
   }, [])
 
-  // Jump to a chapter: glide to its resting point, then move focus to its heading
+  // Jump to a chapter from the nav: glide there, then move focus to its heading
   const goTo = useCallback((i: number) => (e: React.MouseEvent) => {
-    const st = stRef.current
-    if (!st) return
+    if (!travelRef.current) return
     e.preventDefault()
-    const reduced = reducedRef.current
-    // while we glide there, snapping stands aside
-    navRef.current = performance.now() + (reduced ? 200 : 1600)
-    window.scrollTo({ top: Math.round(st.labelToScroll(`c${i}`)), behavior: reduced ? 'auto' : 'smooth' })
+    travelRef.current(i)
     const h = rootRef.current?.querySelector<HTMLElement>(`[data-ch="${i}"] h2, [data-ch="${i}"] h1`)
-    if (h) setTimeout(() => h.focus({ preventScroll: true }), reduced ? 0 : 1000)
+    if (h) setTimeout(() => h.focus({ preventScroll: true }), reducedRef.current ? 0 : 1200)
     const hash = (e.currentTarget as HTMLAnchorElement).hash || (i === 0 ? '#top' : '')
     if (hash) history.replaceState(null, '', hash)
   }, [])
@@ -64,7 +60,7 @@ export default function Site() {
     const root = rootRef.current
     const film = filmRef.current
     if (!root || !film) return
-    gsap.registerPlugin(ScrollTrigger)
+    gsap.registerPlugin(ScrollTrigger, Observer, ScrollToPlugin)
     const view = root.querySelector<HTMLElement>('.sk-view')!
     const canvas = root.querySelector<HTMLCanvasElement>('.sk-canvas')!
     const dots = Array.from(root.querySelectorAll<HTMLElement>('.sk-dots button'))
@@ -72,35 +68,134 @@ export default function Site() {
     reducedRef.current = reduced
 
     const S: SprigState = { ...SPRIG_START }
-    const tl = gsap.timeline({ paused: true, defaults: { ease: 'sine.inOut' } })
     const layers = Array.from(root.querySelectorAll<HTMLElement>('.sk-layer'))
     const kidsOf = (layer: HTMLElement) => layer.querySelectorAll(':scope > div > *')
 
+    // The plant follows the scroll continuously (scrubbed)
+    const tl = gsap.timeline({ paused: true })
     for (let k = 0; k < LAST; k++) {
       const s = 2 * k + 1
-      // the plant moves through the whole change
       tl.to(S, { ...SPRIG_POSES[k], duration: 1, ease: 'power1.inOut' }, s)
       tl.to(S, { c: k + 1, duration: 1, ease: 'none' }, s)
-      // words of chapter k leave first...
-      tl.to(kidsOf(layers[k]), { y: -28, autoAlpha: 0, duration: 0.3, stagger: 0.03, ease: 'power2.in' }, s)
-      tl.set(layers[k], { autoAlpha: 0 }, s + 0.42)
-      // ...and only then do the words of k+1 arrive, settling before the hold
-      tl.set(layers[k + 1], { autoAlpha: 1 }, s + 0.5)
-      tl.fromTo(kidsOf(layers[k + 1]), { y: 36, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, stagger: 0.045, ease: 'power3.out', immediateRender: false }, s + 0.52)
     }
     tl.set({}, {}, TL_END)
     for (let k = 0; k <= LAST; k++) tl.addLabel(`c${k}`, labelAt(k))
-    gsap.set(layers.slice(1), { autoAlpha: 0 })
 
-    // Snap to the chapter you are heading towards; land exactly when already there
-    const stops = Array.from({ length: LAST + 1 }, (_, k) => labelAt(k) / TL_END)
-    let dir = 1
-    const snapTo = (v: number) => {
-      if (performance.now() < navRef.current) return v
-      const near = stops.find((p) => Math.abs(p - v) < 0.012)
-      if (near !== undefined) return near
-      return dir > 0 ? (stops.find((p) => p > v) ?? 1) : ([...stops].reverse().find((p) => p < v) ?? 0)
+    // The words change as a short, timed scene change, never scrubbed: one chapter at a time.
+    // They switch halfway through each change, with a little dead zone so a wobble can't flip them back.
+    gsap.set(layers.slice(1), { autoAlpha: 0 })
+    let shown = 0
+    let words: gsap.core.Timeline | null = null
+    const showChapter = (k: number) => {
+      if (k === shown) return
+      const from = layers[shown], to = layers[k], down = k > shown
+      shown = k
+      words?.progress(1).kill()
+      if (reduced) {
+        gsap.set(from, { autoAlpha: 0 }); gsap.set(to, { autoAlpha: 1 }); gsap.set(kidsOf(to), { y: 0, autoAlpha: 1 })
+        return
+      }
+      words = gsap.timeline()
+        .to(kidsOf(from), { y: down ? -24 : 24, autoAlpha: 0, duration: 0.26, stagger: 0.02, ease: 'power2.in' })
+        .set(from, { autoAlpha: 0 })
+        .set(to, { autoAlpha: 1 })
+        .fromTo(kidsOf(to), { y: down ? 30 : -30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.06, ease: 'power3.out' }, '+=0.04')
     }
+    const DEAD = 0.12
+    const chapterAt = (t: number) => {
+      let k = shown
+      while (k < LAST && t > 2 * k + 1.5 + DEAD) k++
+      while (k > 0 && t < 2 * (k - 1) + 1.5 - DEAD) k--
+      return k
+    }
+
+    // ---- moving between chapters ----
+    // Inside the story every gesture (wheel, trackpad, swipe, key) is one step to the next or
+    // previous chapter. Input is ignored while we glide and until a trackpad's momentum dies
+    // down, so one flick is always one chapter. Below the story the page scrolls normally.
+    let rest = 0                // the chapter we are resting on
+    let gliding = false
+    let target = -1             // chapter we are gliding to (its words show straight away)
+    let lastInput = 0
+    // One gesture = one step. A new gesture starts after a pause, or when the push suddenly
+    // gets stronger; a flick's decaying momentum tail always belongs to the same gesture.
+    let gesture = 0, used = -1, lastMag = 0
+    const onWheel = (e: WheelEvent) => {
+      const now = performance.now(), mag = Math.abs(e.deltaY)
+      if (now - lastInput > 220 || (mag > lastMag * 1.8 && mag > 14)) gesture++
+      lastInput = now
+      lastMag = mag
+    }
+    const onTouchStart = () => { gesture++; lastInput = performance.now() }
+    window.addEventListener('wheel', onWheel, { passive: true, capture: true })
+    window.addEventListener('touchstart', onTouchStart, { passive: true, capture: true })
+    const yOf = (k: number) => Math.round(st.labelToScroll(`c${k}`))
+    const filmEnd = () => st.end
+    const travel = (k: number, after?: () => void) => {
+      k = Math.max(0, Math.min(LAST, k))
+      gliding = true
+      target = k
+      showChapter(k)
+      const dist = Math.abs(yOf(k) - window.scrollY)
+      gsap.to(window, {
+        scrollTo: { y: yOf(k), autoKill: false },
+        duration: reduced ? 0 : Math.min(1.6, 0.85 + dist / 4000),
+        ease: 'power2.inOut',
+        overwrite: true,
+        onComplete: () => {
+          rest = k
+          target = -1
+          after?.()
+          gliding = false
+        },
+      })
+    }
+    travelRef.current = (k) => travel(k)
+    const leaveToFooter = () => {
+      gliding = true
+      gsap.to(window, {
+        scrollTo: { y: Math.min(document.documentElement.scrollHeight - window.innerHeight, filmEnd() + window.innerHeight * 0.75), autoKill: false },
+        duration: reduced ? 0 : 0.9, ease: 'power2.inOut', overwrite: true,
+        onComplete: () => { gliding = false },
+      })
+    }
+    const inStory = () => window.scrollY <= filmEnd() + 2
+    const step = (dir: number, fresh = false) => {
+      if (fresh) gesture++
+      if (gliding || !inStory() || used === gesture) return
+      used = gesture
+      if (dir > 0 && rest === LAST) return leaveToFooter()
+      if (dir < 0 && rest === 0) return
+      travel(rest + dir)
+    }
+    const obs = Observer.create({
+      target: window,
+      type: 'wheel,touch',
+      wheelSpeed: 1,
+      tolerance: 12,
+      preventDefault: true,
+      onChange: (self) => {
+        const e = self.event as Event
+        const dy = e.type === 'wheel' ? self.deltaY : -self.deltaY
+        if (dy) step(Math.sign(dy))
+      },
+    })
+    // Below the story the page scrolls normally; coming back up rejoins the last chapter
+    const onScroll = () => {
+      if (inStory()) { if (!obs.isEnabled) obs.enable() }
+      else if (obs.isEnabled) obs.disable()
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    const onKey = (e: KeyboardEvent) => {
+      if (!inStory() || e.altKey || e.ctrlKey || e.metaKey) return
+      const t = e.target as HTMLElement
+      if (t.closest('input, textarea, select, [contenteditable]')) return
+      const map: Record<string, number> = { ArrowDown: 1, PageDown: 1, ' ': e.shiftKey ? -1 : 1, ArrowUp: -1, PageUp: -1 }
+      if (e.key === 'Home') { e.preventDefault(); return travel(0) }
+      if (e.key === 'End') { e.preventDefault(); return travel(LAST) }
+      if (map[e.key]) { e.preventDefault(); step(map[e.key], true) }
+    }
+    window.addEventListener('keydown', onKey)
 
     // The i in the header grows with the page: a sprout at the top, in bud by Drac
     const sprout = { k: reduced ? 1 : 0 }
@@ -109,12 +204,14 @@ export default function Site() {
     growLogo()
 
     let active = -1
-    const markActive = () => {
-      const now = Math.round(S.c)
-      if (now === active) return
-      active = now
-      dots.forEach((d, i) => d.toggleAttribute('aria-current', i === now))
-      root.dataset.chapter = String(now)
+    const onFrame = () => {
+      // while gliding to a chapter, go straight to its words
+      showChapter(target >= 0 ? target : chapterAt(tl.time()))
+      growLogo()
+      if (shown === active) return
+      active = shown
+      dots.forEach((d, i) => d.toggleAttribute('aria-current', i === shown))
+      root.dataset.chapter = String(shown)
     }
 
     const st = ScrollTrigger.create({
@@ -122,18 +219,25 @@ export default function Site() {
       start: 'top top',
       end: 'bottom bottom',
       animation: tl,
-      scrub: reduced ? true : 0.9,
-      snap: {
-        snapTo,
-        duration: reduced ? 0 : { min: 0.35, max: 0.9 },
-        delay: 0.12,
-        ease: 'power2.inOut',
-      },
-      onUpdate: (self) => { dir = self.direction },
+      scrub: reduced ? true : 0.6,
     })
-    tl.eventCallback('onUpdate', () => { markActive(); growLogo() })
+    tl.eventCallback('onUpdate', onFrame)
     stRef.current = st
-    markActive()
+    // Dragging the scrollbar (or loading mid-way) settles on the nearest chapter
+    const nearest = () => {
+      let best = 0
+      for (let k = 1; k <= LAST; k++) if (Math.abs(yOf(k) - window.scrollY) < Math.abs(yOf(best) - window.scrollY)) best = k
+      return best
+    }
+    const onScrollEnd = () => {
+      if (gliding || !inStory()) return
+      const k = nearest()
+      if (Math.abs(yOf(k) - window.scrollY) > 2) travel(k)
+      else rest = k
+    }
+    ScrollTrigger.addEventListener('scrollEnd', onScrollEnd)
+    rest = nearest()
+    onFrame()
 
     // Refresh measurements once fonts settle
     document.fonts?.ready.then(() => ScrollTrigger.refresh())
@@ -187,8 +291,17 @@ export default function Site() {
       dead = true
       cancelAnimationFrame(raf)
       io.disconnect()
+      ScrollTrigger.removeEventListener('scrollEnd', onScrollEnd)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('wheel', onWheel, { capture: true })
+      window.removeEventListener('touchstart', onTouchStart, { capture: true })
+      obs.kill()
+      gsap.killTweensOf(window)
+      travelRef.current = null
       st.kill()
       tl.kill()
+      words?.kill()
       gsap.killTweensOf(intro)
       gsap.killTweensOf(sprout)
       tl.eventCallback('onUpdate', null)
@@ -255,7 +368,7 @@ export default function Site() {
                 <a href="#drac" onClick={goTo(3)} className="btn btn-ink">Meet Drac</a>
                 <a href="#hello" onClick={goTo(5)} className="link-quiet">Say hello</a>
               </div>
-              <p className="t-note">The i in our name is a sprig. Scroll, and watch it grow.</p>
+              {/* <p className="t-note">The i in our name is a sprig. Scroll, and watch it grow.</p> */}
               <img src="/brand/sprig-light.svg" alt="" className="sk-static-sprig on-light" width={72} height={118} />
             </div>
           </section>
@@ -265,7 +378,7 @@ export default function Site() {
               <h2 id="h-about" tabIndex={-1} className="t-h2">We start with one job</h2>
               <p className="t-body">Not a platform for everything. We pick one job a business does every week, the kind that eats hours and needs care, and build AI that does it well.</p>
               <p className="t-body sk-x">We&rsquo;re a small team. We&rsquo;d rather do one thing properly than ten things loudly.</p>
-              <p className="t-note">Stem first. Leaves later.</p>
+              {/* <p className="t-note">Stem first. Leaves later.</p> */}
             </div>
           </section>
 
@@ -335,7 +448,7 @@ export default function Site() {
           </div>
         </div>
         <div className="sk-footer-legal">
-          <p>&copy; 2026 Skynift Private Limited. Drac is a product of Skynift.</p>
+          <p>&copy; 2026 Skynift Private Limited.</p>
         </div>
       </footer>
     </div>
