@@ -5,9 +5,9 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SPRIG_POSES, SPRIG_START, type SprigState } from '@/lib/sprig-poses'
+import Wordmark, { growWordmark } from '@/components/Wordmark'
 
 const THEME_KEY = 'skynift-theme'
-const WORDMARK_ASPECT = 2.093
 const CHAPTERS = ['Intelligence that grows', 'We start with one job', 'Then we make it show its work', 'Drac', 'More will grow', 'Come say hello']
 const LAST = CHAPTERS.length - 1
 // The film runs on a timeline of 2 units per chapter: hold (words resting), then the change.
@@ -26,21 +26,12 @@ const themeStore = {
   isDarkOnServer: () => false,
 }
 
-function Wordmark({ height, className }: { height: number; className?: string }) {
-  const width = Math.round(height * WORDMARK_ASPECT)
-  return (
-    <>
-      <img src="/brand/skynift-wordmark-light.svg" alt="Skynift" width={width} height={height} className={`on-light ${className ?? ''}`} />
-      <img src="/brand/skynift-wordmark-dark.svg" alt="Skynift" width={width} height={height} className={`on-dark ${className ?? ''}`} />
-    </>
-  )
-}
-
 export default function Site() {
   const rootRef = useRef<HTMLDivElement>(null)
   const filmRef = useRef<HTMLElement>(null)
   const stRef = useRef<ScrollTrigger | null>(null)
   const navRef = useRef(0)
+  const logoRef = useRef<SVGSVGElement>(null)
   const reducedRef = useRef(false)
   const [noGL, setNoGL] = useState(false)
   const dark = useSyncExternalStore(themeStore.subscribe, themeStore.isDark, themeStore.isDarkOnServer)
@@ -111,6 +102,12 @@ export default function Site() {
       return dir > 0 ? (stops.find((p) => p > v) ?? 1) : ([...stops].reverse().find((p) => p < v) ?? 0)
     }
 
+    // The i in the header grows with the page: a sprout at the top, in bud by Drac
+    const sprout = { k: reduced ? 1 : 0 }
+    const growLogo = () => growWordmark(logoRef.current, S.c, sprout.k)
+    if (!reduced) gsap.to(sprout, { k: 1, duration: 1.8, delay: 0.5, ease: 'power3.out', onUpdate: growLogo })
+    growLogo()
+
     let active = -1
     const markActive = () => {
       const now = Math.round(S.c)
@@ -132,8 +129,9 @@ export default function Site() {
         delay: 0.12,
         ease: 'power2.inOut',
       },
-      onUpdate: (self) => { dir = self.direction; markActive() },
+      onUpdate: (self) => { dir = self.direction },
     })
+    tl.eventCallback('onUpdate', () => { markActive(); growLogo() })
     stRef.current = st
     markActive()
 
@@ -192,6 +190,8 @@ export default function Site() {
       st.kill()
       tl.kill()
       gsap.killTweensOf(intro)
+      gsap.killTweensOf(sprout)
+      tl.eventCallback('onUpdate', null)
       scene?.dispose()
       stRef.current = null
     }
@@ -204,7 +204,7 @@ export default function Site() {
       <header className="sk-header">
         <div className="sk-header-in">
           <a href="#top" onClick={goTo(0)} aria-label="Skynift, back to top" className="sk-brand">
-            <Wordmark height={36} />
+            <Wordmark height={44} growth={0} svgRef={logoRef} />
           </a>
           <nav className="sk-nav" aria-label="Main">
             <a href="#about" onClick={goTo(1)}>About</a>
@@ -255,7 +255,7 @@ export default function Site() {
                 <a href="#drac" onClick={goTo(3)} className="btn btn-ink">Meet Drac</a>
                 <a href="#hello" onClick={goTo(5)} className="link-quiet">Say hello</a>
               </div>
-              <p className="t-note">The i in our name is a sprig. Scroll, and it grows.</p>
+              <p className="t-note">The i in our name is a sprig. Scroll, and watch it grow.</p>
               <img src="/brand/sprig-light.svg" alt="" className="sk-static-sprig on-light" width={72} height={118} />
             </div>
           </section>
@@ -320,7 +320,8 @@ export default function Site() {
               <h2 id="h-hello" tabIndex={-1} className="t-h2">Come say hello</h2>
               <p className="t-body">Running ads with Drac, thinking about working with us, or just curious. We read every note.</p>
               <a href="mailto:contact@skynift.com" className="mail-big">contact@skynift.com</a>
-              <p className="t-body" style={{ fontSize: 16 }}>Looking for Drac? <a href="https://drac.ai">Request access at drac.ai</a>.</p>
+              <p className="t-body sk-short-hide" style={{ fontSize: 16 }}>Looking for Drac? <a href="https://drac.ai">Request access at drac.ai</a>.</p>
+              <p className="t-careers">We&rsquo;re always on the lookout for exceptional people. If you&rsquo;d rather face the ocean than stay on the shore, send your resume to <a href="mailto:careers@skynift.com">careers@skynift.com</a>.</p>
             </div>
           </section>
         </div>
@@ -329,17 +330,12 @@ export default function Site() {
       <footer className="sk-footer">
         <div className="sk-footer-top">
           <div className="sk-footer-brand">
-            <Wordmark height={44} />
+            <Wordmark height={48} />
             <p>Intelligence that grows with you.</p>
           </div>
-          <nav aria-label="Footer">
-            <a href="https://drac.ai">Drac</a>
-            <a href="mailto:contact@skynift.com">contact@skynift.com</a>
-          </nav>
         </div>
         <div className="sk-footer-legal">
           <p>&copy; 2026 Skynift Private Limited. Drac is a product of Skynift.</p>
-          <p>Google and Meta are trademarks of their respective owners.</p>
         </div>
       </footer>
     </div>

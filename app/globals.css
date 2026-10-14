@@ -21,6 +21,13 @@
   --gutter: clamp(20px, 4vw, 72px);
   --nav-h: 56px;
 
+  --logo-ink: #2c1810;
+  --logo-sage: #8b9d77;
+  --logo-rose: #c4706e;
+  --logo-bud: #d4a843;
+  --logo-vein: #faf7f2;
+  --logo-vein-op: 0.45;
+
   color-scheme: light;
 }
 
@@ -38,6 +45,13 @@
   --gold: #c9963a;
   --goldT: #c9963a;
   --focus: #e5af5c;
+
+  --logo-ink: #f0e8d8;
+  --logo-sage: #a9bb95;
+  --logo-rose: #e39e9b;
+  --logo-bud: #e5bf5e;
+  --logo-vein: #141210;
+  --logo-vein-op: 0.3;
 
   color-scheme: dark;
 }
@@ -157,7 +171,9 @@ a:focus-visible, button:focus-visible, h1:focus-visible, h2:focus-visible {
   display: flex; align-items: center; gap: 24px;
 }
 .sk-brand { display: flex; align-items: center; min-height: 44px; }
-.sk-brand img { height: 34px; width: auto; display: block; }
+.sk-brand .wordmark { height: 38px; width: auto; display: block; overflow: visible; }
+@media (min-width: 1024px) { .sk-brand .wordmark { height: 44px; } }
+
 .sk-nav { display: flex; gap: 4px; margin-left: auto; font-size: 16px; font-weight: 500; }
 .sk-nav a { padding: 10px 14px; text-decoration: none; border-radius: 9999px; }
 .sk-nav a:hover { background: var(--hair); color: var(--inkH); }
@@ -266,9 +282,14 @@ a:focus-visible, button:focus-visible, h1:focus-visible, h2:focus-visible {
 .drac-id .mark { height: 38px; width: auto; display: block; }
 .drac-id .name { font-family: var(--serif); font-weight: 600; font-size: 36px; line-height: 1; color: var(--gold); }
 .drac-id .by { font-size: 14px; color: var(--ink2); }
-.drac-id .wm { height: 32px; width: auto; display: block; }
+.drac-id .wm { height: 30px; width: auto; display: block; }
 .drac-id .by-wm { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
 
+.t-careers {
+  margin: 4px 0 0; padding-top: 16px; border-top: 1px solid var(--hair);
+  font-size: 15px; line-height: 1.55; color: var(--ink2); text-wrap: pretty; max-width: 440px;
+}
+.t-careers a { color: var(--inkH); font-weight: 500; }
 .mail-big {
   align-self: flex-start; display: flex; align-items: center; min-height: 48px;
   font-family: var(--serif); font-weight: 500; font-size: clamp(26px, 1.2vw + 20px, 40px); line-height: 1.1;
@@ -282,7 +303,7 @@ a:focus-visible, button:focus-visible, h1:focus-visible, h2:focus-visible {
   display: flex; flex-wrap: wrap; gap: 24px 64px; align-items: flex-start; justify-content: space-between;
 }
 .sk-footer-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
-.sk-footer-brand img { height: 40px; width: auto; display: block; }
+.sk-footer-brand .wordmark { height: 48px; width: auto; display: block; }
 .sk-footer-brand p { margin: 0; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 20px; color: var(--ink2); }
 .sk-footer nav { display: flex; flex-wrap: wrap; gap: 4px 32px; font-size: 16px; }
 .sk-footer nav a { display: flex; align-items: center; min-height: 44px; }
@@ -335,7 +356,8 @@ a:focus-visible, button:focus-visible, h1:focus-visible, h2:focus-visible {
   .sk-dot-label { display: none; }
   .t-note { font-size: 18px; }
   .btn { min-height: 44px; }
-  .ledger, .drac-id .by-wm { display: none; }
+  .ledger, .drac-id .by-wm, .sk-short-hide { display: none; }
+  .t-careers { padding-top: 8px; font-size: 14px; }
   .drac-id .mark { height: 28px; }
   .drac-id .name { font-size: 26px; }
 }
