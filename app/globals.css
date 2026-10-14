@@ -189,17 +189,20 @@ a:focus-visible, button:focus-visible, h1:focus-visible, h2:focus-visible {
 .sk-layer > div { display: flex; flex-direction: column; gap: 18px; }
 .sk-hero { display: flex; flex-direction: column; gap: 20px; }
 .sk-hero > div { gap: 20px; }
-.sk-canvas, .sk-rail, .sk-lab, .sk-fallback { display: none; }
+.sk-canvas, .sk-dots, .sk-lab, .sk-fallback { display: none; }
 .sk-film { padding-top: var(--nav-h); }
 
 /* Static layout (no JS): a quiet sprig beside the hero */
 .sk-static-sprig { display: block; width: 72px; height: auto; margin: 8px 0 0; }
 
 .js .sk-static-sprig { display: none; }
-.js .sk-film { height: 735vh; position: relative; padding-top: 0; }
+.js .sk-film { height: 760vh; position: relative; padding-top: 0; }
 .js .sk-view { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
 .js .sk-canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
-.js .sk-rail, .js .sk-lab { display: block; }
+.js .sk-lab { display: block; }
+.js .sk-dots { display: flex; }
+.js .sk-canvas { opacity: 0; transition: opacity 900ms cubic-bezier(0.2, 0, 0, 1); }
+.js [data-scene='ready'] .sk-canvas { opacity: 1; }
 .js .sk-layer {
   position: absolute; top: 0; bottom: 0;
   padding: calc(var(--nav-h) + 12px) 0 48px;
@@ -228,8 +231,26 @@ a:focus-visible, button:focus-visible, h1:focus-visible, h2:focus-visible {
   font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 20px;
   color: var(--ink2); white-space: nowrap;
 }
-.sk-rail { position: absolute; bottom: 28px; left: 50%; width: 160px; height: 1px; margin-left: -80px; background: var(--hair); }
-.sk-rail-fill { height: 1px; background: var(--inkH); transform-origin: 0 50%; transform: scaleX(0); }
+.sk-dots {
+  position: absolute; z-index: 5; left: 50%; bottom: max(10px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+  flex-direction: row; gap: 0;
+}
+.sk-dots button {
+  position: relative; width: 34px; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; color: var(--inkH);
+}
+.sk-dot {
+  width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--ink2); background: transparent;
+  transition: transform 400ms cubic-bezier(0.2, 0, 0, 1), background-color 400ms, width 400ms cubic-bezier(0.2, 0, 0, 1);
+}
+.sk-dots button[aria-current] .sk-dot { width: 22px; border-radius: 9999px; background: var(--inkH); border-color: var(--inkH); }
+.sk-dots button:hover .sk-dot { border-color: var(--roseT); }
+.sk-dot-label {
+  position: absolute; bottom: 40px; left: 50%; transform: translate(-50%, 4px); white-space: nowrap;
+  font-size: 14px; color: var(--ink2); background: var(--bg); padding: 2px 10px; border-radius: 9999px;
+  opacity: 0; pointer-events: none; transition: opacity 250ms, transform 250ms cubic-bezier(0.2, 0, 0, 1);
+}
+.sk-dots button:hover .sk-dot-label, .sk-dots button:focus-visible .sk-dot-label { opacity: 1; transform: translate(-50%, 0); }
 
 /* ---------- chapter details ---------- */
 .dots { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 16px; font-weight: 500; color: var(--inkH); }
@@ -279,7 +300,8 @@ a:focus-visible, button:focus-visible, h1:focus-visible, h2:focus-visible {
   .js .sk-hero > div { width: 52vw; }
   .js .sk-fallback.on { justify-content: flex-end; padding-right: 4vw; }
   .js .sk-fallback img { height: 40%; }
-  .sk-x, .sk-lab-note, .sk-lab-ghost, .sk-rail { display: none !important; }
+  .sk-x, .sk-lab-note, .sk-lab-ghost { display: none !important; }
+  .sk-dot-label { display: none; }
   .t-h2 { font-size: 2.05rem; }
   .mail-big { font-size: 22px; }
   .drac-id .mark { height: 32px; }
@@ -308,7 +330,9 @@ a:focus-visible, button:focus-visible, h1:focus-visible, h2:focus-visible {
   .sk-x, .sk-lab-note { display: none !important; }
   .js .sk-layer { font-size: 15px; padding-top: calc(var(--nav-h) + 4px); padding-bottom: 16px; }
   .sk-layer > div, .sk-hero > div { gap: 10px !important; }
-  .sk-rail { display: none !important; }
+  .sk-dots { bottom: 0; }
+  .sk-dots button { height: 34px; }
+  .sk-dot-label { display: none; }
   .t-note { font-size: 18px; }
   .btn { min-height: 44px; }
   .ledger, .drac-id .by-wm { display: none; }

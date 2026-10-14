@@ -11,15 +11,19 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: '/' },
-  icons: { icon: [{ url: '/brand/sprig-light.svg', type: 'image/svg+xml' }, { url: '/favicon.ico' }] },
+  applicationName: 'Skynift',
+  authors: [{ name: 'Skynift Private Limited' }],
   openGraph: {
     type: 'website',
     url: 'https://skynift.com',
     siteName: 'Skynift',
+    locale: 'en_US',
     title: TITLE,
     description: DESCRIPTION,
   },
-  twitter: { card: 'summary', title: TITLE, description: DESCRIPTION },
+  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
+  appleWebApp: { title: 'Skynift', statusBarStyle: 'default' },
+  formatDetection: { telephone: false, email: false, address: false },
 }
 
 export const viewport: Viewport = {
@@ -33,12 +37,23 @@ export const viewport: Viewport = {
 // so the scroll film lays out without a flash of the static layout.
 const PRE_PAINT = `(function(){var d=document.documentElement;d.classList.add('js');var t;try{t=localStorage.getItem('skynift-theme')}catch(e){}if(t!=='dark'&&t!=='light'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}d.dataset.theme=t;if(t==='dark'){var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content','#141210')}})();`
 
+const ORG_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Skynift',
+  legalName: 'Skynift Private Limited',
+  url: 'https://skynift.com',
+  logo: 'https://skynift.com/icons/icon-512.png',
+  email: 'contact@skynift.com',
+  slogan: 'Intelligence that grows with you.',
+  brand: { '@type': 'Brand', name: 'Drac', url: 'https://drac.ai' },
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-theme="light" className={`${serif.variable} ${sans.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: PRE_PAINT }} />
-        <link rel="preload" href="/vendor/three-r149.min.js" as="script" />
         {/* Google Tag Manager */}
         <Script
           id="gtm-script"
@@ -59,6 +74,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PZ8VSSR8" height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
           }}
         />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }} />
         {children}
       </body>
     </html>
